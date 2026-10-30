@@ -1,0 +1,22 @@
+---
+description: Read the Digital Pager MVP doc before any code change
+alwaysApply: true
+---
+
+# Digital Pager MVP reference
+
+Before generating or modifying any code, read `app/digital_pager_mvp_documentation.md` (revised 29 Oct 2026). It is the source of truth for product rules, architecture, tech stack, API contract, and UI. Follow it. Do not invent a parallel model.
+
+This workspace is the **Next.js client**. Laravel (a separate repo) owns business rules, tenant isolation, orders, tokens, and push delivery. Render UI and call that API. Do not duplicate those rules here.
+
+## What to follow
+
+- **Stack (§3):** Next.js with JavaScript (not TypeScript), Tailwind CSS. shadcn/ui is optional. Polling only. No socket client, Redis, WebSockets, SMS, WhatsApp, email, POS, or Firebase unless the doc is revised.
+- **Auth (§3):** Sanctum personal access tokens as `Authorization: Bearer`. Never send a trusted `restaurant_id`. Cookie SPA auth is out of scope.
+- **API (§7):** Use the documented routes and error codes (`order_unavailable`, `order_link_limit`). `already_notified` is HTTP 200, not an error. Public responses contain no cashier data, other orders, subscription secrets, or numeric ids.
+- **Polling (§7):** Customer status and cashier list every 4 seconds. Keep polling through `ready`. Update the acting tablet from the Notify, Resend, Collect, or Cancel response immediately.
+- **Push (§9):** Status page works with polling before permission. Explain unsupported or blocked notifications in Arabic, including the iOS Home Screen step. Never claim the customer received a push. Never put secrets in the payload or logs.
+- **UI (§10):** Cashier dashboard for a tablet (large actions, one create field, Notify disabled after `waiting`). Customer pages Arabic, RTL, mobile-first, nothing else on screen. Shared `/r/{slug}` and status `/o/{token}`. Platform admin creates restaurants and cashiers. Landing page does not call the order API.
+- **Scope (§2, §11, §14):** Cashier dashboard, then customer pages, service worker, then admin. Keep each change small. Do not build excluded features (native apps, customer accounts, password reset, billing, menus, kitchen screens).
+
+Customer copy is Arabic. The API returns English error codes; this app chooses the Arabic sentence.
