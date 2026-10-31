@@ -328,6 +328,67 @@ section[id] {
   }
 }
 
+.pager-mark {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  flex: none;
+  border-radius: 16px;
+  background: linear-gradient(160deg, #3a3a3a, #1c1c1c);
+}
+
+.pager-mark::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: #2a2a2a;
+  box-shadow: inset 0 0 0 2px #444;
+}
+
+.pager-mark::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 23px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff3b30;
+  animation: pager-led 0.5s steps(1) infinite;
+}
+
+.pager-mark.is-on {
+  animation: pager-buzz 0.12s linear 8;
+}
+
+@keyframes pager-led {
+  0% {
+    background: #ff3b30;
+    box-shadow: 0 0 14px 4px rgba(255, 59, 48, 0.8);
+  }
+
+  50% {
+    background: #5a1b1b;
+    box-shadow: none;
+  }
+}
+
+@keyframes pager-buzz {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  25% {
+    translate: -3px 1px;
+  }
+
+  75% {
+    translate: 3px -1px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -342,6 +403,8 @@ section[id] {
   .scan-line,
   .order-digit,
   .order-field::after,
+  .pager-mark,
+  .pager-mark::after,
   .story-screen,
   .story-dot,
   .intro-ring,
@@ -360,6 +423,11 @@ section[id] {
 
   .order-digit {
     opacity: 1;
+  }
+
+  .pager-mark::after {
+    background: #ff3b30;
+    box-shadow: 0 0 14px 4px rgba(255, 59, 48, 0.8);
   }
 
   .intro-film {

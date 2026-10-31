@@ -17,6 +17,20 @@ function BrandMark({ className = "h-14 w-14" }) {
   );
 }
 
+function BrandIcon({ className = "h-[54px] w-[54px]" }) {
+  return (
+    <span className={`relative block shrink-0 overflow-hidden rounded-2xl bg-ivory ${className}`} aria-hidden="true">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/logo.png"
+        alt=""
+        className="absolute max-w-none"
+        style={{ width: "403%", height: "auto", left: "-156%", top: "-268%" }}
+      />
+    </span>
+  );
+}
+
 const orderNo = "٤٧";
 const readyWord = "جاهز";
 const counterLine = "للاستلام من الصندوق";
@@ -610,6 +624,8 @@ export default function HomePage() {
 
         <StepsStory />
 
+        <CompareSection />
+
         <section id="modes" className="bg-[#f7f1e4] px-5 py-24 sm:py-28">
           <div className="mx-auto max-w-6xl">
             <motion.div {...rise} className="max-w-2xl">
@@ -906,6 +922,113 @@ function StageReady() {
         رقم {orderNo}
       </p>
     </div>
+  );
+}
+
+function CompareSection() {
+  const [pagerOn, setPagerOn] = useState(false);
+  const rows = [
+    {
+      label: "التكلفة",
+      retired: "شراء أجهزة وتكاليف استبدال",
+      kept: "بلا شراء أجهزة، وبلا استبدال",
+    },
+    {
+      label: "المدى",
+      retired: "نطاق محدود يختلف بحسب نوع الجهاز",
+      kept: "غير محدود بنطاق جهاز",
+    },
+    {
+      label: "الأجهزة والصيانة",
+      retired: "أجهزة تحتاج إلى شحن وتنظيف وصيانة",
+      kept: "جوال العميل فقط",
+    },
+    {
+      label: "الهوية",
+      retired: "جهاز عام بدون هوية",
+      kept: "الصفحة باسم مطعمكم",
+    },
+    {
+      label: "التركيب",
+      retired: "تركيب وتجهيز أجهزة",
+      kept: "ملصق واحد، بلا تركيب أجهزة",
+    },
+    {
+      label: "التقييم",
+      retired: "لا يدعم طلب التقييم من العميل",
+      kept: "بعد الاستلام، التقييم من الصفحة نفسها",
+    },
+  ];
+
+  return (
+    <section id="compare" className="bg-[#f7f1e4] px-5 py-24 sm:py-28" aria-labelledby="compare-title">
+      <div className="mx-auto max-w-6xl">
+        <motion.div {...rise} className="max-w-3xl">
+          <h2 id="compare-title" className="font-display text-4xl leading-tight font-bold text-burgundy-deep sm:text-5xl">
+            جهاز النداء، ولا جوال الزبون؟
+          </h2>
+        </motion.div>
+
+        <div className="mt-12 grid items-stretch gap-5 lg:grid-cols-2">
+          <motion.article
+            {...rise}
+            onViewportEnter={() => setPagerOn(true)}
+            className="relative overflow-hidden rounded-[1.6rem] bg-white p-6 shadow-[0_20px_50px_-28px_rgba(74,4,24,0.28)] ring-1 ring-burgundy/10 sm:p-8"
+          >
+            <span className="absolute top-7 end-5 -rotate-12 rounded-lg border-2 border-burgundy/70 px-2.5 py-0.5 font-display text-base font-bold text-burgundy sm:top-8 sm:end-8 sm:px-3 sm:py-1 sm:text-lg">
+              خلص زمنه
+            </span>
+            <div className="flex items-center gap-3 pe-28 sm:pe-24">
+              <span className={pagerOn ? "pager-mark is-on" : "pager-mark"} aria-hidden="true" />
+              <div>
+                <h3 className="font-display text-2xl font-bold text-burgundy-deep">جهاز النداء</h3>
+                <p className="mt-1 text-sm text-ink/55">نظام يعتمد على أجهزة مستقلة</p>
+              </div>
+            </div>
+            <ul className="mt-8">
+              {rows.map((row) => (
+                <li key={row.label} className="flex items-start gap-3 border-t border-burgundy/10 py-4 first:border-t-0 first:pt-0 last:pb-0">
+                  <svg viewBox="0 0 24 24" className="mt-0.5 h-[22px] w-[22px] shrink-0 rounded-full bg-[#FDE7E7] p-1 text-burgundy" aria-hidden="true">
+                    <path fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" d="M7 7l10 10M17 7L7 17" />
+                  </svg>
+                  <div>
+                    <p className="text-sm font-semibold text-burgundy">{row.label}</p>
+                    <p className="mt-0.5 text-base leading-7 text-ink/75">{row.retired}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </motion.article>
+
+          <motion.article
+            {...rise}
+            transition={{ duration: 0.55, delay: 0.08, ease: "easeOut" }}
+            className="rounded-[1.6rem] bg-burgundy-deep p-6 text-ivory shadow-[0_24px_50px_-24px_rgba(74,4,24,0.55)] sm:p-8"
+          >
+            <div className="flex items-center gap-3">
+              <BrandIcon />
+              <div>
+                <h3 className="font-display text-2xl font-bold">ناديني</h3>
+                <p className="mt-1 text-sm text-gold">جوال الزبون هو الجهاز</p>
+              </div>
+            </div>
+            <ul className="mt-8">
+              {rows.map((row) => (
+                <li key={row.label} className="flex items-start gap-3 border-t border-white/15 py-4 first:border-t-0 first:pt-0 last:pb-0">
+                  <svg viewBox="0 0 24 24" className="mt-0.5 h-[22px] w-[22px] shrink-0 rounded-full bg-gold p-1 text-burgundy-deep" aria-hidden="true">
+                    <path fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" d="M5 12.5l4.5 4.5L19 7.5" />
+                  </svg>
+                  <div>
+                    <p className="text-sm font-semibold text-gold">{row.label}</p>
+                    <p className="mt-0.5 text-base leading-7 text-ivory/90">{row.kept}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </motion.article>
+        </div>
+      </div>
+    </section>
   );
 }
 
