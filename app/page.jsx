@@ -446,34 +446,12 @@ const steps = [
   },
 ];
 
+const whatsappHref =
+  "https://wa.me/963946431543?text=" +
+  encodeURIComponent("مرحبا، بدي أجرّب ناديني لمحلي");
+const instagramHref = "https://www.instagram.com/nadeeni.sy/";
+
 export default function HomePage() {
-  const [ticket, setTicket] = useState("");
-  const [copied, setCopied] = useState(false);
-
-  function onSubmit(event) {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const note = String(data.get("note") || "").trim();
-    const text = [
-      "طلب تجربة ناديني",
-      `المطعم: ${data.get("restaurant")}`,
-      `المدينة: ${data.get("city")}`,
-      `الهاتف: ${data.get("phone")}`,
-      `ملاحظة: ${note || "—"}`,
-    ].join("\n");
-    setTicket(text);
-    setCopied(false);
-  }
-
-  async function copyTicket() {
-    try {
-      await navigator.clipboard.writeText(ticket);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
-  }
-
   return (
     <div id="top" className="overflow-x-clip">
       <IntroFilm />
@@ -494,7 +472,7 @@ export default function HomePage() {
             </a>
           </nav>
           <a
-            href="#request"
+            href="#contact"
             className="rounded-2xl bg-burgundy px-4 py-2.5 text-sm font-semibold text-ivory shadow-[0_10px_30px_-12px_rgba(126,6,42,0.8)] transition duration-300 hover:-translate-y-0.5 hover:bg-burgundy-deep hover:shadow-[0_12px_26px_-12px_rgba(74,4,24,0.55)]"
           >
             اطلبوا التجربة
@@ -538,7 +516,7 @@ export default function HomePage() {
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <a
-                  href="#request"
+                  href="#contact"
                   className="rounded-2xl bg-burgundy px-7 py-3.5 font-semibold text-ivory shadow-[0_16px_40px_-18px_rgba(126,6,42,0.9)] transition duration-300 hover:-translate-y-0.5 hover:bg-burgundy-deep hover:shadow-[0_14px_28px_-12px_rgba(74,4,24,0.55)]"
                 >
                   اطلبوا التجربة
@@ -682,7 +660,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section id="request" className="relative overflow-hidden bg-gold px-5 py-24 sm:py-28">
+        {/* <section id="request" className="relative overflow-hidden bg-gold px-5 py-24 sm:py-28">
           <div
             className="pointer-events-none absolute -top-28 start-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-white/30 blur-3xl"
             aria-hidden="true"
@@ -790,16 +768,96 @@ export default function HomePage() {
               ) : null}
             </motion.form>
           </div>
-        </section>
+        </section> */}
       </main>
 
-      <footer className="border-t border-burgundy/10 px-5 py-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-          <a href="#top">
-            <BrandMark className="h-14 w-14" />
-          </a>
-          <p className="text-sm text-ink/60">ناديني · نداء الطلب من هاتف الزبون</p>
-          <p className="text-sm text-ink/60">بلا أجهزة · بلا تطبيق · بلا حساب</p>
+      <footer id="contact" className="bg-burgundy-deep px-5 py-16 text-ivory sm:py-24">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="font-display text-4xl font-bold sm:text-5xl">تواصل معنا</h2>
+
+          <div className="mt-7 grid gap-3 lg:grid-cols-[1.35fr_1fr]">
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 rounded-[1.25rem] bg-gold px-5 py-4 text-burgundy-deep transition duration-300 hover:-translate-y-0.5 hover:bg-[#d7b45a]"
+            >
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-burgundy-deep text-gold" aria-hidden="true">
+                <svg viewBox="0 0 24 24" className="h-6 w-6">
+                  <path fill="currentColor" d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.2 21.8l4.9-1.3A9.8 9.8 0 1 0 12 2.2Zm0 17.8a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20Zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2 5.1 5.1 0 0 0 1.1 2.7 11.6 11.6 0 0 0 4.4 3.9c1.6.7 2.3.8 3.1.6.5-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.2l-.5-.3Z" />
+                </svg>
+              </span>
+              <span>
+                <small className="block text-sm font-semibold text-burgundy-deep/70">احكي معنا عالواتساب</small>
+                <b className="mt-0.5 block text-lg font-bold" dir="ltr">0946 431 543</b>
+              </span>
+            </a>
+
+            <a
+              href={instagramHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 rounded-[1.25rem] bg-white/10 px-5 py-4 text-ivory ring-1 ring-white/15 transition duration-300 hover:-translate-y-0.5 hover:bg-white/15"
+            >
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/10" aria-hidden="true">
+                <svg viewBox="0 0 24 24" className="h-6 w-6">
+                  <rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" strokeWidth="2" />
+                  <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="2" />
+                  <circle cx="17.3" cy="6.7" r="1.2" fill="currentColor" />
+                </svg>
+              </span>
+              <span>
+                <small className="block text-sm font-semibold text-ivory/70">تابعنا على انستغرام</small>
+                <b className="mt-0.5 block text-lg font-bold" dir="ltr">@nadeeni.sy</b>
+              </span>
+            </a>
+          </div>
+
+          <div className="mt-12 flex flex-col gap-6 border-t border-white/15 pt-8 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <a href="#top" className="inline-flex items-center gap-3">
+                <BrandIcon className="h-11 w-11" />
+                <span className="font-display text-2xl font-bold">ناديني</span>
+              </a>
+              <p className="mt-2 text-sm text-ivory/65">نداء الطلب من هاتف الزبون.</p>
+            </div>
+
+            <nav aria-label="روابط" className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-ivory/80">
+              <a href="#benefits" className="transition-colors hover:text-gold">لماذا ناديني</a>
+              <a href="#steps" className="transition-colors hover:text-gold">الطريقة</a>
+              <a href="#compare" className="transition-colors hover:text-gold">المقارنة</a>
+              <a href="#modes" className="transition-colors hover:text-gold">الرمز</a>
+            </nav>
+
+            <div className="flex gap-2.5">
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="واتساب"
+                className="grid h-11 w-11 place-items-center rounded-2xl bg-white/10 transition duration-300 hover:-translate-y-0.5 hover:bg-gold hover:text-burgundy-deep"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+                  <path fill="currentColor" d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.2 21.8l4.9-1.3A9.8 9.8 0 1 0 12 2.2Zm0 17.8a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20Zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2 5.1 5.1 0 0 0 1.1 2.7 11.6 11.6 0 0 0 4.4 3.9c1.6.7 2.3.8 3.1.6.5-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.2l-.5-.3Z" />
+                </svg>
+              </a>
+              <a
+                href={instagramHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="انستغرام"
+                className="grid h-11 w-11 place-items-center rounded-2xl bg-white/10 transition duration-300 hover:-translate-y-0.5 hover:bg-gold hover:text-burgundy-deep"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+                  <rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" strokeWidth="2" />
+                  <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="2" />
+                  <circle cx="17.3" cy="6.7" r="1.2" fill="currentColor" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <p className="mt-7 text-sm text-ivory/50">© 2026 ناديني. جميع الحقوق محفوظة. صُنع في سوريا.</p>
         </div>
       </footer>
     </div>
