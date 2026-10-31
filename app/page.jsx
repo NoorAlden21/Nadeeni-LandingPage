@@ -552,51 +552,58 @@ function StagePhone() {
   return (
     <div className="relative mx-auto w-full max-w-[340px] pt-6">
       <span className="pointer-events-none absolute top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-gold/20 blur-3xl" aria-hidden="true" />
-      {ready ? (
-        <span className="intro-wave pointer-events-none absolute top-16 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full border border-gold/50" aria-hidden="true" />
+      {ready && live ? (
+        <span className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <span className="notify-ripple" />
+          <span className="notify-ripple" />
+          <span className="notify-ripple" />
+        </span>
       ) : null}
 
-      <motion.div
-        className="relative"
-        animate={live ? { y: [0, -8, 0] } : { y: 0 }}
-        transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <motion.div
-          aria-hidden={!ready}
-          animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: -16 }}
-          transition={{ duration: 0.45, ease: "easeOut" }}
-          className="pointer-events-none absolute -top-5 inset-x-1 z-20 flex items-center gap-3 rounded-[1.3rem] bg-white px-3 py-2 shadow-[0_18px_40px_-18px_rgba(74,4,24,0.5)] ring-1 ring-gold/50"
-        >
-          <BrandMark className="h-12 w-12 shrink-0" />
-          <div className="min-w-0 text-start">
-            <p className="text-sm font-bold text-burgundy">جاهز</p>
-            <p className="text-xs text-ink/60">للاستلام من الصندوق</p>
-          </div>
-          <span className="ms-auto grid h-8 min-w-8 place-items-center rounded-full bg-gold/30 px-2 text-sm font-bold text-burgundy-deep">
-            ٤٧
-          </span>
-        </motion.div>
+      <div className={`relative ${live ? "stage-float" : ""}`}>
+        <div className={ready && live ? "phone-buzz" : ""}>
+          <motion.div
+            aria-hidden={!ready}
+            initial={false}
+            animate={ready ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: -24, scale: 0.9 }}
+            transition={
+              ready
+                ? { type: "spring", stiffness: 460, damping: 16, mass: 0.7 }
+                : { duration: 0.22, ease: "easeIn" }
+            }
+            className="pointer-events-none absolute -top-5 inset-x-1 z-20 flex items-center gap-3 rounded-[1.3rem] bg-white px-3 py-2 shadow-[0_18px_40px_-18px_rgba(74,4,24,0.5)] ring-1 ring-gold/50"
+          >
+            <BrandMark className="h-12 w-12 shrink-0" />
+            <div className="min-w-0 text-start">
+              <p className="text-sm font-bold text-burgundy">جاهز</p>
+              <p className="text-xs text-ink/60">للاستلام من الصندوق</p>
+            </div>
+            <span className="ms-auto grid h-8 min-w-8 place-items-center rounded-full bg-gold/30 px-2 text-sm font-bold text-burgundy-deep">
+              ٤٧
+            </span>
+          </motion.div>
 
-        <div className="mx-auto w-[244px] rounded-[2.35rem] bg-burgundy-deep p-[10px] shadow-[0_30px_60px_-24px_rgba(74,4,24,0.7)]">
-          <div className="relative h-[440px] overflow-hidden rounded-[1.85rem]">
-            <motion.div
-              className="absolute inset-0"
-              animate={{ backgroundColor: ready ? "#7e062a" : "#fdfaf1" }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-            <span className="absolute top-2.5 left-1/2 z-10 h-4 w-16 -translate-x-1/2 rounded-full bg-black/25" />
-            <motion.div
-              key={ready ? "ready" : "wait"}
-              className="absolute inset-0"
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            >
-              {ready ? <StageReady /> : <StageWait live={live} />}
-            </motion.div>
+          <div className="mx-auto w-[244px] rounded-[2.35rem] bg-burgundy-deep p-[10px] shadow-[0_30px_60px_-24px_rgba(74,4,24,0.7)]">
+            <div className="relative h-[440px] overflow-hidden rounded-[1.85rem]">
+              <motion.div
+                className="absolute inset-0"
+                animate={{ backgroundColor: ready ? "#7e062a" : "#fdfaf1" }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              />
+              <span className="absolute top-2.5 left-1/2 z-10 h-4 w-16 -translate-x-1/2 rounded-full bg-black/25" />
+              <motion.div
+                key={ready ? "ready" : "wait"}
+                className="absolute inset-0"
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              >
+                {ready ? <StageReady /> : <StageWait live={live} />}
+              </motion.div>
+            </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -646,9 +653,9 @@ function StageReady() {
   return (
     <div className="flex h-full flex-col items-center justify-center px-4 pb-6 text-center text-ivory">
       <motion.span
-        initial={{ scale: 0.6, opacity: 0 }}
+        initial={{ scale: 0.4, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+        transition={{ type: "spring", stiffness: 420, damping: 14 }}
         className="grid h-16 w-16 place-items-center rounded-full bg-gold text-3xl font-bold text-burgundy-deep"
       >
         ✓
