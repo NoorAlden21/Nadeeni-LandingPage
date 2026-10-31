@@ -79,7 +79,7 @@ function RippleBurst({ className }) {
   );
 }
 
-function ReadyNotice({ tone }) {
+function ReadyNotice({ tone, number = orderNo }) {
   const tones = {
     hero: {
       mark: "h-12 w-12 shrink-0",
@@ -107,7 +107,7 @@ function ReadyNotice({ tone }) {
         <p className={style.title}>{readyWord}</p>
         <p className={style.detail}>{style.detailText}</p>
       </div>
-      <span className={style.badge}>{orderNo}</span>
+      <span className={style.badge}>{number}</span>
     </>
   );
 }
@@ -391,11 +391,11 @@ function FilmReady() {
   return <ReadyPanel />;
 }
 
-function StoryReady() {
+function StoryReady({ number = orderNo }) {
   return (
     <ReadyPanel>
       <div className="story-notif absolute top-10 inset-x-2 z-20 flex items-center gap-2 rounded-2xl bg-white px-2.5 py-2 text-start shadow-[0_14px_28px_-16px_rgba(74,4,24,0.55)]">
-        <ReadyNotice tone="story" />
+        <ReadyNotice tone="story" number={number} />
       </div>
     </ReadyPanel>
   );
@@ -451,7 +451,242 @@ const whatsappHref =
   encodeURIComponent("مرحبا، بدي أجرّب ناديني لمحلي");
 const instagramHref = "https://www.instagram.com/nadeeni.sy/";
 
+const demoBeats = [
+  {
+    id: "scan",
+    label: "امسح الرمز",
+    role: "الخطوة الأولى · الزبون",
+    title: "تبدأ بمسحة واحدة.",
+    body: "بيمسح الرمز بكاميرا جواله، بدون تطبيق وبدون حساب، وبيكتب رقم طلبه. المسح هنا محاكاة، وما منفتح الكاميرا.",
+    action: "جرّب مسح الرمز",
+    state: "بانتظار مسح الرمز",
+    caption: "أولًا، الزبون يمسح الرمز اللي عالكاونتر.",
+  },
+  {
+    id: "wait",
+    label: "كم باقي",
+    role: "الخطوة الثانية · الزبون",
+    title: "بيشوف كم باقي لطلبه.",
+    body: "التايمر يضل قدامه على الجوال، فبيقعد مرتاح بدل ما يضل واقف عالكاونتر يسأل.",
+    action: "نبّه الزبون",
+    state: "العميل يتابع الطلب",
+    caption: "رقم 215 قدامه، والتايمر يعدّ.",
+  },
+  {
+    id: "ready",
+    label: "يصل التنبيه",
+    role: "الخطوة الثالثة · الكاشير",
+    title: "ضغطة تنبيه، والصفحة تصير جاهز.",
+    body: "لما يجهز الأكل بتضغطون «تنبيه». الصفحة المفتوحة تصير «جاهز». الزر تحت يعيد نفس التنبيه للعرض، وبالخدمة الضغطة الثانية ما بترسل إشعارًا ثانيًا.",
+    action: "",
+    state: "جاهز للاستلام",
+    caption: "الصفحة صارت جاهز، والزبون يشوفها بدون ما يحدّث.",
+  },
+];
+
+function playReadyChime() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+  const context = new AudioContext();
+  const now = context.currentTime;
+  [523.25, 783.99].forEach((frequency, index) => {
+    const tone = context.createOscillator();
+    const gain = context.createGain();
+    const start = now + index * 0.11;
+    tone.type = "sine";
+    tone.frequency.value = frequency;
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(0.05, start + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.32);
+    tone.connect(gain);
+    gain.connect(context.destination);
+    tone.start(start);
+    tone.stop(start + 0.34);
+  });
+  window.setTimeout(() => context.close(), 900);
+}
+
+function TryStudio({ open, onClose }) {
+  const dialogRef = useRef(null);
+  const [step, setStep] = useState(0);
+  const [sound, setSound] = useState(true);
+  const [replay, setReplay] = useState(0);
+  const beat = demoBeats[step];
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) setSound(false);
+  }, []);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return undefined;
+    if (open) {
+      setStep(0);
+      setReplay(0);
+      if (!dialog.open) dialog.showModal();
+    } else if (dialog.open) {
+      dialog.close();
+    }
+    return undefined;
+  }, [open]);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return undefined;
+    const handleClose = () => onClose();
+    dialog.addEventListener("close", handleClose);
+    return () => dialog.removeEventListener("close", handleClose);
+  }, [onClose]);
+
+  function advance() {
+    if (step === 1 && sound) playReadyChime();
+    setStep((current) => Math.min(current + 1, demoBeats.length - 1));
+  }
+
+  function notifyAgain() {
+    if (sound) playReadyChime();
+    setReplay((value) => value + 1);
+  }
+
+  return (
+    <dialog
+      ref={dialogRef}
+      className="try-studio"
+      aria-labelledby="try-title"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <div className="flex max-h-[calc(100dvh-1.5rem)] flex-col">
+        <header className="flex items-start justify-between gap-4 border-b border-burgundy/10 px-5 py-4 sm:px-7">
+          <div>
+            <p className="text-sm font-semibold text-gold-deep">جرّب ناديني</p>
+            <h2 id="try-title" className="mt-1 font-display text-2xl leading-tight font-bold text-burgundy-deep sm:text-3xl">
+              من مسح الرمز… إلى التنبيه.
+            </h2>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 rounded-2xl bg-white px-3 py-2 text-sm font-semibold text-burgundy ring-1 ring-burgundy/10"
+              aria-pressed={sound}
+              onClick={() => setSound((value) => !value)}
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="m8 8 5-4v16l-5-4H4V8h4Z" />
+                {sound ? <path d="M17 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14" /> : <path d="m17 9 5 6m0-6-5 6" />}
+              </svg>
+              <span className="hidden sm:inline">{sound ? "الصوت مفعّل" : "الصوت مقفل"}</span>
+            </button>
+            <button
+              type="button"
+              className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-burgundy ring-1 ring-burgundy/10"
+              aria-label="إغلاق التجربة"
+              onClick={onClose}
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+                <path d="m6 6 12 12M18 6 6 18" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <ol className="flex flex-wrap gap-x-5 gap-y-2 border-b border-burgundy/10 px-5 py-3 sm:px-7" aria-label="خطوات التجربة">
+          {demoBeats.map((item, index) => (
+            <li key={item.id} className="flex items-center gap-2 text-sm font-semibold" aria-current={index === step ? "step" : undefined}>
+              <b
+                className={`grid h-7 w-7 place-items-center rounded-full text-xs ${
+                  index === step
+                    ? "bg-burgundy text-ivory"
+                    : index < step
+                      ? "bg-gold text-burgundy-deep"
+                      : "bg-burgundy/10 text-burgundy/35"
+                }`}
+              >
+                {index < step ? "✓" : index + 1}
+              </b>
+              <span className={index === step ? "text-burgundy" : "text-ink/45"}>{item.label}</span>
+            </li>
+          ))}
+        </ol>
+
+        <div className="grid min-h-0 flex-1 gap-6 overflow-y-auto px-5 py-5 sm:px-7 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
+          <div className="order-2 lg:order-none">
+            <p className="text-sm font-semibold text-gold-deep">{beat.role}</p>
+            <h3 className="mt-2 font-display text-3xl leading-tight font-bold text-burgundy-deep">{beat.title}</h3>
+            <p className="mt-3 max-w-md text-base leading-7 text-ink/70">{beat.body}</p>
+            <div className="mt-5 flex items-center justify-between gap-3 rounded-2xl bg-white px-4 py-3 ring-1 ring-burgundy/10">
+              <p className="text-sm text-ink/55">
+                الطلب <strong className="ms-1 font-sans text-xl font-bold text-burgundy-deep" dir="ltr">#215</strong>
+              </p>
+              <p className="text-sm font-semibold text-burgundy">{beat.state}</p>
+            </div>
+            {step < 2 ? (
+              <button
+                type="button"
+                onClick={advance}
+                className="mt-4 flex w-full items-center justify-center gap-3 rounded-2xl bg-burgundy px-5 py-3.5 font-semibold text-ivory transition duration-300 hover:bg-burgundy-deep"
+              >
+                {beat.action}
+                <span aria-hidden="true">←</span>
+              </button>
+            ) : (
+              <div className="mt-4 flex flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={notifyAgain}
+                  className="flex w-full items-center justify-center gap-3 rounded-2xl bg-burgundy px-5 py-3.5 font-semibold text-ivory transition duration-300 hover:bg-burgundy-deep"
+                >
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 6-3 7-3 9h18c0-2-3-3-3-9M10 21h4" />
+                  </svg>
+                  نادِه مرة ثانية
+                  <span aria-hidden="true">←</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep(0);
+                    setReplay(0);
+                  }}
+                  className="text-sm font-semibold text-burgundy"
+                >
+                  أعد التجربة من المسح
+                </button>
+              </div>
+            )}
+            <p className="mt-3 text-sm leading-6 text-ink/55">
+              {step === 2
+                ? "محاكاة داخل الصفحة. الصفحة هي المرجع، وما بنعد إن الإشعار وصل ليد الزبون."
+                : "محاكاة فقط. ما منفتح الكاميرا ولا منطلب صلاحيات."}
+            </p>
+          </div>
+
+          <div className="order-1 flex flex-col items-center lg:order-none">
+            <p className="mb-3 text-sm font-semibold text-gold-deep">جوال الزبون</p>
+            <PhoneShell
+              key={`${beat.id}-${replay}`}
+              shell={`${phoneShells.story.shell} ${step === 2 ? "phone-buzz" : ""}`}
+              screen={phoneShells.story.screen}
+              notch={phoneShells.story.notch}
+            >
+              <div className="story-screen is-on absolute inset-0">
+                {step === 0 ? <StoryScan /> : null}
+                {step === 1 ? <StoryWait /> : null}
+                {step === 2 ? <StoryReady number="215" /> : null}
+              </div>
+            </PhoneShell>
+            <p className="mt-4 max-w-xs text-center text-sm leading-6 text-ink/60">{beat.caption}</p>
+          </div>
+        </div>
+      </div>
+    </dialog>
+  );
+}
+
 export default function HomePage() {
+  const [demoOpen, setDemoOpen] = useState(false);
+
   return (
     <div id="top" className="overflow-x-clip">
       <IntroFilm />
@@ -515,9 +750,16 @@ export default function HomePage() {
               الزبون بيقعد مرتاح وبيتابع طلبه من متصفح موبايله بدون ما يحمّل أي تطبيق. وبس يجهز الأكل؟ تنبيه فوري بيوصله ليستلمه              </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setDemoOpen(true)}
+                  className="rounded-2xl bg-burgundy px-7 py-3.5 font-semibold text-ivory shadow-[0_16px_40px_-18px_rgba(126,6,42,0.9)] transition duration-300 hover:-translate-y-0.5 hover:bg-burgundy-deep hover:shadow-[0_14px_28px_-12px_rgba(74,4,24,0.55)]"
+                >
+                  جرّب النداء بنفسك
+                </button>
                 <a
                   href="#contact"
-                  className="rounded-2xl bg-burgundy px-7 py-3.5 font-semibold text-ivory shadow-[0_16px_40px_-18px_rgba(126,6,42,0.9)] transition duration-300 hover:-translate-y-0.5 hover:bg-burgundy-deep hover:shadow-[0_14px_28px_-12px_rgba(74,4,24,0.55)]"
+                  className="rounded-2xl border border-burgundy/15 bg-white/80 px-7 py-3.5 font-semibold text-burgundy transition duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-paper hover:shadow-[0_14px_28px_-14px_rgba(140,110,44,0.45)]"
                 >
                   اطلبوا التجربة
                 </a>
@@ -860,6 +1102,7 @@ export default function HomePage() {
           <p className="mt-7 text-sm text-ivory/50">© 2026 ناديني. جميع الحقوق محفوظة. صُنع في سوريا.</p>
         </div>
       </footer>
+      <TryStudio open={demoOpen} onClose={() => setDemoOpen(false)} />
     </div>
   );
 }
