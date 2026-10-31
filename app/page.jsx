@@ -17,6 +17,96 @@ function BrandMark({ className = "h-14 w-14" }) {
   );
 }
 
+const orderNo = "٤٧";
+const readyWord = "جاهز";
+const counterLine = "للاستلام من الصندوق";
+
+const phoneNotch =
+  "absolute top-2.5 left-1/2 z-10 h-4 w-14 -translate-x-1/2 rounded-full bg-burgundy-deep/90";
+const phoneShadow =
+  "bg-burgundy-deep p-[9px] shadow-[0_30px_60px_-28px_rgba(74,4,24,0.55)]";
+
+const phoneShells = {
+  intro: {
+    shell: `intro-phone-buzz w-[180px] rounded-[2.1rem] sm:w-[200px] ${phoneShadow}`,
+    screen: "relative h-[300px] overflow-hidden rounded-[1.6rem] bg-ivory sm:h-[360px]",
+    notch: phoneNotch,
+  },
+  story: {
+    shell: `w-[214px] rounded-[2.2rem] ${phoneShadow}`,
+    screen: "relative h-[390px] overflow-hidden rounded-[1.7rem] bg-ivory",
+    notch: phoneNotch,
+  },
+  hero: {
+    shell: "mx-auto w-[244px] rounded-[2.35rem] bg-burgundy-deep p-[10px] shadow-[0_30px_60px_-24px_rgba(74,4,24,0.7)]",
+    screen: "relative h-[440px] overflow-hidden rounded-[1.85rem]",
+    notch: "absolute top-2.5 left-1/2 z-10 h-4 w-16 -translate-x-1/2 rounded-full bg-black/25",
+  },
+};
+
+function PhoneShell({ shell, screen, notch, children }) {
+  return (
+    <div className={shell}>
+      <div className={screen}>
+        <span className={notch} />
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function RippleBurst({ className }) {
+  return (
+    <span className="pointer-events-none absolute inset-0" aria-hidden="true">
+      <span className={className} />
+      <span className={className} />
+      <span className={className} />
+    </span>
+  );
+}
+
+function ReadyNotice({ tone }) {
+  const tones = {
+    hero: {
+      mark: "h-12 w-12 shrink-0",
+      copy: "min-w-0 text-start",
+      title: "text-sm font-bold text-burgundy",
+      detail: "text-xs text-ink/60",
+      detailText: counterLine,
+      badge: "ms-auto grid h-8 min-w-8 place-items-center rounded-full bg-gold/30 px-2 text-sm font-bold text-burgundy-deep",
+    },
+    story: {
+      mark: "h-8 w-8 shrink-0",
+      copy: "min-w-0 flex-1",
+      title: "text-xs leading-4 font-bold text-burgundy",
+      detail: "text-[11px] leading-4 text-ink/55",
+      detailText: "من الصندوق",
+      badge: "grid h-6 min-w-6 place-items-center rounded-full bg-gold/30 px-1.5 text-[11px] font-bold text-burgundy-deep",
+    },
+  };
+  const style = tones[tone];
+
+  return (
+    <>
+      <BrandMark className={style.mark} />
+      <div className={style.copy}>
+        <p className={style.title}>{readyWord}</p>
+        <p className={style.detail}>{style.detailText}</p>
+      </div>
+      <span className={style.badge}>{orderNo}</span>
+    </>
+  );
+}
+
+function ReadyLines({ titleClassName, detailClassName }) {
+  return (
+    <>
+      <p className={titleClassName}>{readyWord}</p>
+      <p className={detailClassName}>{counterLine}</p>
+    </>
+  );
+}
+
 function FormMark() {
   return (
     <div className="relative mx-auto mb-7 h-28 w-28 overflow-hidden rounded-[1.5rem] bg-ivory ring-1 ring-gold/50">
@@ -89,25 +179,18 @@ function IntroFilm() {
 
       <div className="flex w-full max-w-sm flex-col items-center">
         <div className="relative">
-          <span className="pointer-events-none absolute inset-0" aria-hidden="true">
-            <span className="intro-ripple" />
-            <span className="intro-ripple" />
-            <span className="intro-ripple" />
-          </span>
-          <div className="intro-phone-buzz w-[180px] rounded-[2.1rem] bg-burgundy-deep p-[9px] shadow-[0_30px_60px_-28px_rgba(74,4,24,0.55)] sm:w-[200px]">
-            <div className="relative h-[300px] overflow-hidden rounded-[1.6rem] bg-ivory sm:h-[360px]">
-              <span className="absolute top-2.5 left-1/2 z-10 h-4 w-14 -translate-x-1/2 rounded-full bg-burgundy-deep/90" />
-              <div className="film-pane film-pane-0">
-                <FilmScan />
-              </div>
-              <div className="film-pane film-pane-1">
-                <FilmOrder />
-              </div>
-              <div className="film-pane film-pane-2">
-                <FilmReady />
-              </div>
+          <RippleBurst className="intro-ripple" />
+          <PhoneShell {...phoneShells.intro}>
+            <div className="film-pane film-pane-0">
+              <FilmScan />
             </div>
-          </div>
+            <div className="film-pane film-pane-1">
+              <FilmOrder />
+            </div>
+            <div className="film-pane film-pane-2">
+              <FilmReady />
+            </div>
+          </PhoneShell>
         </div>
 
         <div className="relative mt-6 h-28 w-full max-w-xs">
@@ -151,37 +234,35 @@ function FilmOrder() {
   return (
     <div className="flex h-full flex-col items-center justify-center bg-ivory px-4 text-center">
       <p className="text-sm font-medium text-burgundy">اسم مطعمكم</p>
-      <p className="mt-3 font-sans text-6xl leading-none font-bold text-burgundy-deep">٤٧</p>
+      <p className="mt-3 font-sans text-6xl leading-none font-bold text-burgundy-deep">{orderNo}</p>
       <p className="mt-2 text-xs text-ink/55">رقم الطلب</p>
     </div>
   );
 }
 
-function FilmReady() {
+function ReadyPanel({ children }) {
   return (
-    <div className="flex h-full flex-col items-center justify-center bg-burgundy px-4 text-center text-ivory">
-      <p className="font-display text-5xl font-bold">جاهز</p>
-      <p className="mt-2 text-sm text-gold">للاستلام من الصندوق</p>
+    <div className="relative flex h-full flex-col items-center justify-center bg-burgundy px-4 text-center text-ivory">
+      {children}
+      <ReadyLines
+        titleClassName="font-display text-5xl font-bold"
+        detailClassName="mt-2 text-sm text-gold"
+      />
     </div>
   );
 }
 
+function FilmReady() {
+  return <ReadyPanel />;
+}
+
 function StoryReady() {
   return (
-    <div className="relative flex h-full flex-col items-center justify-center bg-burgundy px-4 text-center text-ivory">
+    <ReadyPanel>
       <div className="story-notif absolute top-10 inset-x-2 z-20 flex items-center gap-2 rounded-2xl bg-white px-2.5 py-2 text-start shadow-[0_14px_28px_-16px_rgba(74,4,24,0.55)]">
-        <BrandMark className="h-8 w-8 shrink-0" />
-        <div className="min-w-0 flex-1">
-          <p className="text-xs leading-4 font-bold text-burgundy">جاهز</p>
-          <p className="text-[11px] leading-4 text-ink/55">من الصندوق</p>
-        </div>
-        <span className="grid h-6 min-w-6 place-items-center rounded-full bg-gold/30 px-1.5 text-[11px] font-bold text-burgundy-deep">
-          ٤٧
-        </span>
+        <ReadyNotice tone="story" />
       </div>
-      <p className="font-display text-5xl font-bold">جاهز</p>
-      <p className="mt-2 text-sm text-gold">للاستلام من الصندوق</p>
-    </div>
+    </ReadyPanel>
   );
 }
 
@@ -578,13 +659,7 @@ function StagePhone() {
   return (
     <div className="relative mx-auto w-full max-w-[340px] pt-6">
       <span className="pointer-events-none absolute top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-gold/20 blur-3xl" aria-hidden="true" />
-      {ready && live ? (
-        <span className="pointer-events-none absolute inset-0" aria-hidden="true">
-          <span className="notify-ripple" />
-          <span className="notify-ripple" />
-          <span className="notify-ripple" />
-        </span>
-      ) : null}
+      {ready && live ? <RippleBurst className="notify-ripple" /> : null}
 
       <div className={`relative ${live ? "stage-float" : ""}`}>
         <div className={ready && live ? "phone-buzz" : ""}>
@@ -599,24 +674,15 @@ function StagePhone() {
             }
             className="pointer-events-none absolute -top-5 inset-x-1 z-20 flex items-center gap-3 rounded-[1.3rem] bg-white px-3 py-2 shadow-[0_18px_40px_-18px_rgba(74,4,24,0.5)] ring-1 ring-gold/50"
           >
-            <BrandMark className="h-12 w-12 shrink-0" />
-            <div className="min-w-0 text-start">
-              <p className="text-sm font-bold text-burgundy">جاهز</p>
-              <p className="text-xs text-ink/60">للاستلام من الصندوق</p>
-            </div>
-            <span className="ms-auto grid h-8 min-w-8 place-items-center rounded-full bg-gold/30 px-2 text-sm font-bold text-burgundy-deep">
-              ٤٧
-            </span>
+            <ReadyNotice tone="hero" />
           </motion.div>
 
-          <div className="mx-auto w-[244px] rounded-[2.35rem] bg-burgundy-deep p-[10px] shadow-[0_30px_60px_-24px_rgba(74,4,24,0.7)]">
-            <div className="relative h-[440px] overflow-hidden rounded-[1.85rem]">
+          <PhoneShell {...phoneShells.hero}>
               <motion.div
                 className="absolute inset-0"
                 animate={{ backgroundColor: ready ? "#7e062a" : "#fdfaf1" }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               />
-              <span className="absolute top-2.5 left-1/2 z-10 h-4 w-16 -translate-x-1/2 rounded-full bg-black/25" />
               <motion.div
                 key={ready ? "ready" : "wait"}
                 className="absolute inset-0"
@@ -626,8 +692,7 @@ function StagePhone() {
               >
                 {ready ? <StageReady /> : <StageWait live={live} />}
               </motion.div>
-            </div>
-          </div>
+          </PhoneShell>
         </div>
       </div>
     </div>
@@ -644,7 +709,7 @@ function StageWait({ live }) {
         <span className="text-sm font-semibold text-burgundy-deep">اسم مطعمكم</span>
       </div>
       <p className="mt-7 text-xs tracking-wide text-ink/50">رقم الطلب</p>
-      <p className="mt-1 font-sans text-7xl leading-none font-bold text-burgundy-deep">٤٧</p>
+      <p className="mt-1 font-sans text-7xl leading-none font-bold text-burgundy-deep">{orderNo}</p>
       <div className="relative mt-6 h-28 w-28">
         <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90" aria-hidden="true">
           <circle cx="60" cy="60" r="50" fill="none" stroke="#f3e6c8" strokeWidth="7" />
@@ -686,11 +751,11 @@ function StageReady() {
       >
         ✓
       </motion.span>
-      <p className="mt-5 font-display text-6xl leading-none font-bold">جاهز</p>
+      <p className="mt-5 font-display text-6xl leading-none font-bold">{readyWord}</p>
       <span className="mt-3 h-1 w-16 rounded-full bg-gold" />
-      <p className="mt-3 text-sm text-gold">للاستلام من الصندوق</p>
+      <p className="mt-3 text-sm text-gold">{counterLine}</p>
       <p className="mt-6 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-ivory ring-1 ring-gold/40">
-        رقم ٤٧
+        رقم {orderNo}
       </p>
     </div>
   );
@@ -762,23 +827,24 @@ function StoryPhone({ step }) {
     { id: "order", Screen: FilmOrder },
     { id: "ready", Screen: StoryReady },
   ];
+  const buzzing = screens[step]?.id === "ready";
 
   return (
     <div className="relative">
-      <div className={`w-[214px] rounded-[2.2rem] bg-burgundy-deep p-[9px] shadow-[0_30px_60px_-28px_rgba(74,4,24,0.55)] ${step === 2 ? "phone-buzz" : ""}`}>
-        <div className="relative h-[390px] overflow-hidden rounded-[1.7rem] bg-ivory">
-          <span className="absolute top-2.5 left-1/2 z-10 h-4 w-14 -translate-x-1/2 rounded-full bg-burgundy-deep/90" />
-          {screens.map(({ id, Screen }, index) => (
-            <div
-              key={id}
-              aria-hidden={step !== index}
-              className={`story-screen absolute inset-0 ${step === index ? "is-on" : ""}`}
-            >
-              <Screen />
-            </div>
-          ))}
-        </div>
-      </div>
+      <PhoneShell
+        {...phoneShells.story}
+        shell={`${phoneShells.story.shell} ${buzzing ? "phone-buzz" : ""}`}
+      >
+        {screens.map(({ id, Screen }, index) => (
+          <div
+            key={id}
+            aria-hidden={step !== index}
+            className={`story-screen absolute inset-0 ${step === index ? "is-on" : ""}`}
+          >
+            <Screen />
+          </div>
+        ))}
+      </PhoneShell>
       <div className="absolute top-1/2 -end-[26px] grid -translate-y-1/2 gap-2" aria-hidden="true">
         {screens.map(({ id }, index) => (
           <span
