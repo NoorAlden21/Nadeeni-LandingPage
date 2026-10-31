@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function BrandMark({ className = "h-14 w-14" }) {
   return (
@@ -230,12 +230,133 @@ function FilmScan() {
   );
 }
 
+function StoryScan() {
+  const digits = ["2", "1", "5"];
+
+  return (
+    <div className="flex h-full flex-col bg-ivory px-3 pt-11 pb-4">
+      <div className="flex items-center justify-center gap-2">
+        <span className="grid h-6 w-6 place-items-center rounded-md bg-gold text-xs font-bold text-burgundy-deep">
+          ن
+        </span>
+        <span className="text-sm font-bold text-burgundy-deep">اسم مطعمكم</span>
+      </div>
+      <div className="relative mt-3 grid min-h-0 flex-1 place-items-center overflow-hidden rounded-2xl bg-foam">
+        <span className="absolute top-3 start-4 h-4 w-4 border-t-2 border-s-2 border-gold" />
+        <span className="absolute top-3 end-4 h-4 w-4 border-t-2 border-e-2 border-gold" />
+        <span className="absolute bottom-3 start-4 h-4 w-4 border-b-2 border-s-2 border-gold" />
+        <span className="absolute end-4 bottom-3 h-4 w-4 border-e-2 border-b-2 border-gold" />
+        <span className="relative block w-[7.6rem] -rotate-6 rounded-2xl bg-white px-3 pt-2.5 pb-3 text-center shadow-[0_10px_18px_-12px_rgba(74,4,24,0.5)]">
+          <p className="mb-2 text-[11px] leading-4 font-bold text-burgundy">امسح وتابع طلبك</p>
+          <span className="relative mx-auto block w-fit overflow-hidden rounded-xl">
+            <QrMotif />
+            <span className="scan-line" aria-hidden="true" />
+          </span>
+        </span>
+      </div>
+      <p className="mt-3 text-start text-[11px] font-semibold text-ink/55">رقم طلبك</p>
+      <div
+        className="order-field mt-1.5 flex h-11 items-center justify-end rounded-xl px-3 font-sans text-2xl font-bold text-burgundy-deep ring-2 ring-burgundy-deep"
+        dir="ltr"
+      >
+        {digits.map((digit, index) => (
+          <span key={index} className="order-digit">
+            {digit}
+          </span>
+        ))}
+      </div>
+      <div className="mt-2 grid h-10 place-items-center rounded-xl bg-gold text-sm font-bold text-burgundy-deep">
+        تابع طلبي
+      </div>
+    </div>
+  );
+}
+
 function FilmOrder() {
   return (
     <div className="flex h-full flex-col items-center justify-center bg-ivory px-4 text-center">
       <p className="text-sm font-medium text-burgundy">اسم مطعمكم</p>
       <p className="mt-3 font-sans text-6xl leading-none font-bold text-burgundy-deep">{orderNo}</p>
       <p className="mt-2 text-xs text-ink/55">رقم الطلب</p>
+    </div>
+  );
+}
+
+function StoryWait() {
+  const start = 6 * 60 + 30;
+  const end = 5 * 60 + 30;
+  const tick = 400;
+  const radius = 40;
+  const length = 2 * Math.PI * radius;
+  const [left, setLeft] = useState(start);
+  const [snap, setSnap] = useState(false);
+  const leftRef = useRef(start);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const timer = window.setInterval(() => {
+      const next = leftRef.current <= end ? start : leftRef.current - 1;
+      if (next === start) setSnap(true);
+      leftRef.current = next;
+      setLeft(next);
+    }, tick);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!snap) return undefined;
+    const frame = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => setSnap(false));
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [snap]);
+
+  const minutes = Math.floor(left / 60);
+  const seconds = String(left % 60).padStart(2, "0");
+  const passed = (start - left) / (start - end);
+  const fill = 0.65 - passed * 0.18;
+
+  return (
+    <div className="flex h-full flex-col bg-ivory px-3.5 pt-11 pb-4">
+      <div className="flex items-center justify-center gap-2">
+        <span className="grid h-6 w-6 place-items-center rounded-md bg-gold text-xs font-bold text-burgundy-deep">
+          ن
+        </span>
+        <span className="text-sm font-bold text-burgundy-deep">اسم مطعمكم</span>
+      </div>
+      <p className="mt-5 text-center text-[11px] font-semibold text-ink/50">طلبك رقم</p>
+      <p className="mt-1 text-center font-sans text-[2.6rem] leading-none font-bold text-burgundy-deep" dir="ltr">
+        215
+      </p>
+      <div className="relative mx-auto mt-4 grid h-36 w-36 place-items-center">
+        <svg viewBox="0 0 100 100" className="-rotate-90" aria-hidden="true">
+          <circle cx="50" cy="50" r={radius} fill="none" strokeWidth="8" className="stroke-gold/20" />
+          <circle
+            cx="50"
+            cy="50"
+            r={radius}
+            fill="none"
+            strokeWidth="8"
+            strokeLinecap="round"
+            className="stroke-gold"
+            style={snap ? undefined : { transition: `stroke-dashoffset ${tick}ms linear` }}
+            strokeDasharray={length}
+            strokeDashoffset={length * (1 - fill)}
+          />
+        </svg>
+        <div className="absolute text-center">
+          <p className="font-sans text-[1.65rem] leading-none font-bold text-burgundy-deep" dir="ltr">
+            {minutes}:{seconds}
+          </p>
+          <p className="mt-1 text-[10px] font-medium text-ink/50">دقائق تقريباً</p>
+        </div>
+      </div>
+      <div className="mt-auto flex items-center justify-between rounded-2xl bg-foam px-3 py-2.5">
+        <span className="text-[11px] font-semibold text-ink/55">جاهز حوالي</span>
+        <b className="font-sans text-sm font-bold text-burgundy-deep" dir="ltr">
+          9:46
+        </b>
+      </div>
     </div>
   );
 }
@@ -266,21 +387,48 @@ function StoryReady() {
   );
 }
 
+function StoryRate() {
+  return (
+    <div className="flex h-full flex-col items-center justify-center bg-ivory px-4 text-center">
+      <h3 className="font-display text-3xl font-bold text-burgundy-deep">بالعافية!</h3>
+      <p className="mt-2 text-sm leading-6 text-ink/60">شو رأيك باسم مطعمكم؟</p>
+      <div className="mt-5 flex gap-1.5 text-gold" aria-hidden="true">
+        {Array.from({ length: 5 }, (_, index) => (
+          <svg key={index} viewBox="0 0 24 24" className="h-7 w-7 fill-current">
+            <path d="M12 2.6 14.7 8.1 21 9l-4.4 4.3 1 6.1L12 16.8 6.4 19.4l1-6.1L3 9l6.3-.9L12 2.6z" />
+          </svg>
+        ))}
+      </div>
+      <div className="mt-6 inline-flex items-center gap-1.5 rounded-xl bg-burgundy px-4 py-2.5 text-sm font-bold text-ivory">
+        <svg viewBox="0 0 24 24" className="h-4 w-4 fill-gold" aria-hidden="true">
+          <path d="M12 2.6 14.7 8.1 21 9l-4.4 4.3 1 6.1L12 16.8 6.4 19.4l1-6.1L3 9l6.3-.9L12 2.6z" />
+        </svg>
+        اترك تقييمك
+      </div>
+    </div>
+  );
+}
+
 const steps = [
   {
     n: "٠١",
-    title: "الكاشير يكتب الرقم",
-    body: "نفس رقم الطلب المطبوع اليوم. الزبون لا ينشئ الطلب، ولا يوجد قائمة طعام أو دفع داخل ناديني.",
+    title: "العميل بيمسح الكود اللي عالكاونتر",
+    body: "بكاميرا جواله، بدون تطبيق وبدون حساب. بيكتب رقم طلبه وخلص.",
   },
   {
     n: "٠٢",
-    title: "الهاتف يدخل من رمز",
-    body: "مسح للرمز، أو كتابة الرقم إذا كان الملصق واحداً للمطعم كله. المتصفح الذي يملكه الزبون يكفي. بلا تطبيق وبلا حساب.",
+    title: "بيشوف كم باقي لطلبه",
+    body: "تايمر قدامه طول الوقت، فبيقعد مرتاح بدل ما يضل واقف عالكاونتر يسأل.",
   },
   {
     n: "٠٣",
     title: "ضغطة تنبيه",
     body: "عندما يجهز الطعام تضغطون «تنبيه». الصفحة المفتوحة تصبح «جاهز» خلال ثوانٍ. ضغطة ثانية لا ترسل إشعاراً آخر.",
+  },
+  {
+    n: "٠٤",
+    title: "وبعدين بيقيّم محلك",
+    body: "بعد ما يستلم، بيطلعله زر بيفتح صفحة ليترك تقييمه لحتى تقدر تتابع رضى العملاء.",
   },
 ];
 
@@ -770,7 +918,7 @@ function StepsStory() {
         <motion.div {...rise} className="max-w-xl">
           <p className="text-sm font-semibold text-gold-deep">من الصندوق إلى الهاتف</p>
           <h2 className="mt-3 font-display text-4xl leading-tight font-bold text-burgundy-deep sm:text-5xl">
-            ثلاث حركات. ثم ينتظر الزبون حيث يشاء.
+            أربع حركات. ثم ينتظر الزبون حيث يشاء.
           </h2>
         </motion.div>
 
@@ -823,9 +971,10 @@ function StepsStory() {
 
 function StoryPhone({ step }) {
   const screens = [
-    { id: "scan", Screen: FilmScan },
-    { id: "order", Screen: FilmOrder },
+    { id: "scan", Screen: StoryScan },
+    { id: "order", Screen: StoryWait },
     { id: "ready", Screen: StoryReady },
+    { id: "rate", Screen: StoryRate },
   ];
   const buzzing = screens[step]?.id === "ready";
 
