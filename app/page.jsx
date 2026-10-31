@@ -911,6 +911,35 @@ function StageReady() {
 
 function StepsStory() {
   const [active, setActive] = useState(0);
+  const [compact, setCompact] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 1023px)");
+    const sync = () => setCompact(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (!compact) return undefined;
+    const pick = () => {
+      const cards = [...document.querySelectorAll("#steps li")];
+      const mark = window.innerHeight * 0.7;
+      let next = 0;
+      cards.forEach((card, index) => {
+        if (card.getBoundingClientRect().top <= mark) next = index;
+      });
+      setActive(next);
+    };
+    pick();
+    window.addEventListener("scroll", pick, { passive: true });
+    window.addEventListener("resize", pick);
+    return () => {
+      window.removeEventListener("scroll", pick);
+      window.removeEventListener("resize", pick);
+    };
+  }, [compact]);
 
   return (
     <section id="steps" className="bg-white px-5 py-24 sm:py-28">
@@ -922,23 +951,27 @@ function StepsStory() {
           </h2>
         </motion.div>
 
-        <div className="mt-8 grid items-start lg:grid-cols-2 lg:gap-16">
-          <div className="order-1 mb-8 flex justify-center lg:order-2 lg:sticky lg:top-28 lg:mb-0 lg:self-start lg:pt-10">
-            <StoryPhone step={active} />
+        <div className="mt-8 lg:grid lg:grid-cols-2 lg:items-start lg:gap-16">
+          <div className="sticky top-20 z-20 -mx-5 mb-2 flex justify-center bg-white px-5 pt-2 pb-3 lg:top-28 lg:z-auto lg:order-2 lg:mx-0 lg:mb-0 lg:self-start lg:bg-transparent lg:px-0 lg:pt-10 lg:pb-0">
+            <div className="origin-top scale-[0.72] -mb-[7.125rem] sm:scale-[0.86] sm:-mb-14 lg:mb-0 lg:scale-100">
+              <StoryPhone step={active} />
+            </div>
           </div>
 
-          <ol className="order-2 lg:order-1">
+          <ol className="lg:order-1">
             {steps.map((step, index) => {
               const on = active === index;
               return (
                 <motion.li
                   key={step.n}
-                  className="flex min-h-[46vh] items-center py-3 lg:min-h-[72vh]"
+                  className="flex min-h-[52vh] items-center py-3 lg:min-h-[72vh]"
                   initial={{ opacity: 0, y: 28 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.55, ease: "easeOut" }}
-                  viewport={{ once: true, amount: 0.72 }}
-                  onViewportEnter={() => setActive(index)}
+                  viewport={{ once: true, amount: compact ? 0.35 : 0.72 }}
+                  onViewportEnter={() => {
+                    if (!compact) setActive(index);
+                  }}
                 >
                   <article
                     className={`w-full max-w-md rounded-[1.4rem] bg-white p-6 transition duration-300 sm:p-8 ${
