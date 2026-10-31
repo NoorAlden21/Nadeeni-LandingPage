@@ -81,12 +81,8 @@ section[id] {
   animation: intro-ring 5.2s linear forwards;
 }
 
-.intro-wave {
-  animation: intro-wave 1.5s ease-out infinite;
-}
-
-.film-late.intro-wave {
-  animation: film-pane-2 5.2s linear forwards, intro-wave 1.5s ease-out 3.4s infinite;
+.intro-phone-buzz {
+  animation: phone-buzz 0.12s linear 3.4s 6;
 }
 
 @keyframes intro-dismiss {
@@ -140,15 +136,27 @@ section[id] {
   }
 }
 
-@keyframes intro-wave {
-  0% {
-    opacity: 0.45;
-    transform: scale(0.92);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.28);
-  }
+.intro-ripple {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  width: 13rem;
+  height: 13rem;
+  margin-top: -6.5rem;
+  margin-left: -6.5rem;
+  border-radius: 9999px;
+  border: 2px solid #cda649;
+  opacity: 0;
+  pointer-events: none;
+  animation: notify-wave 1.6s cubic-bezier(0.2, 0.9, 0.2, 1) 3.4s forwards;
+}
+
+.intro-ripple:nth-child(2) {
+  animation-delay: 3.62s;
+}
+
+.intro-ripple:nth-child(3) {
+  animation-delay: 3.84s;
 }
 
 .notify-ripple {
@@ -225,8 +233,9 @@ section[id] {
   .stage-float,
   .phone-buzz,
   .notify-ripple,
+  .intro-ripple,
+  .intro-phone-buzz,
   .intro-ring,
-  .intro-wave,
   .film-pane-0,
   .film-pane-1,
   .film-pane-2,

@@ -89,8 +89,12 @@ function IntroFilm() {
 
       <div className="flex w-full max-w-sm flex-col items-center">
         <div className="relative">
-          <span className="film-late pointer-events-none absolute inset-[-18px] rounded-[2.8rem] border border-gold/70 intro-wave" aria-hidden="true" />
-          <div className="w-[180px] rounded-[2.1rem] bg-burgundy-deep p-[9px] shadow-[0_30px_60px_-28px_rgba(74,4,24,0.55)] sm:w-[200px]">
+          <span className="pointer-events-none absolute inset-0" aria-hidden="true">
+            <span className="intro-ripple" />
+            <span className="intro-ripple" />
+            <span className="intro-ripple" />
+          </span>
+          <div className="intro-phone-buzz w-[180px] rounded-[2.1rem] bg-burgundy-deep p-[9px] shadow-[0_30px_60px_-28px_rgba(74,4,24,0.55)] sm:w-[200px]">
             <div className="relative h-[300px] overflow-hidden rounded-[1.6rem] bg-ivory sm:h-[360px]">
               <span className="absolute top-2.5 left-1/2 z-10 h-4 w-14 -translate-x-1/2 rounded-full bg-burgundy-deep/90" />
               <div className="film-pane film-pane-0">
