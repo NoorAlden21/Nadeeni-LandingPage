@@ -166,6 +166,25 @@ function FilmReady() {
   );
 }
 
+function StoryReady() {
+  return (
+    <div className="relative flex h-full flex-col items-center justify-center bg-burgundy px-4 text-center text-ivory">
+      <div className="story-notif absolute top-10 inset-x-2 z-20 flex items-center gap-2 rounded-2xl bg-white px-2.5 py-2 text-start shadow-[0_14px_28px_-16px_rgba(74,4,24,0.55)]">
+        <BrandMark className="h-8 w-8 shrink-0" />
+        <div className="min-w-0 flex-1">
+          <p className="text-xs leading-4 font-bold text-burgundy">جاهز</p>
+          <p className="text-[11px] leading-4 text-ink/55">من الصندوق</p>
+        </div>
+        <span className="grid h-6 min-w-6 place-items-center rounded-full bg-gold/30 px-1.5 text-[11px] font-bold text-burgundy-deep">
+          ٤٧
+        </span>
+      </div>
+      <p className="font-display text-5xl font-bold">جاهز</p>
+      <p className="mt-2 text-sm text-gold">للاستلام من الصندوق</p>
+    </div>
+  );
+}
+
 const steps = [
   {
     n: "٠١",
@@ -738,21 +757,37 @@ function StepsStory() {
 }
 
 function StoryPhone({ step }) {
+  const screens = [
+    { id: "scan", Screen: FilmScan },
+    { id: "order", Screen: FilmOrder },
+    { id: "ready", Screen: StoryReady },
+  ];
+
   return (
-    <div className="w-[214px] rounded-[2.2rem] bg-burgundy-deep p-[9px] shadow-[0_30px_60px_-28px_rgba(74,4,24,0.55)]">
-      <div className="relative h-[390px] overflow-hidden rounded-[1.7rem] bg-ivory">
-        <span className="absolute top-2.5 left-1/2 z-10 h-4 w-14 -translate-x-1/2 rounded-full bg-burgundy-deep/90" />
-        <motion.div
-          key={step}
-          className="absolute inset-0"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-        >
-          {step === 0 ? <FilmScan /> : null}
-          {step === 1 ? <FilmOrder /> : null}
-          {step === 2 ? <FilmReady /> : null}
-        </motion.div>
+    <div className="relative">
+      <div className={`w-[214px] rounded-[2.2rem] bg-burgundy-deep p-[9px] shadow-[0_30px_60px_-28px_rgba(74,4,24,0.55)] ${step === 2 ? "phone-buzz" : ""}`}>
+        <div className="relative h-[390px] overflow-hidden rounded-[1.7rem] bg-ivory">
+          <span className="absolute top-2.5 left-1/2 z-10 h-4 w-14 -translate-x-1/2 rounded-full bg-burgundy-deep/90" />
+          {screens.map(({ id, Screen }, index) => (
+            <div
+              key={id}
+              aria-hidden={step !== index}
+              className={`story-screen absolute inset-0 ${step === index ? "is-on" : ""}`}
+            >
+              <Screen />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="absolute top-1/2 -end-[26px] grid -translate-y-1/2 gap-2" aria-hidden="true">
+        {screens.map(({ id }, index) => (
+          <span
+            key={id}
+            className={`story-dot block w-1.5 rounded-full ${
+              step === index ? "h-[22px] bg-burgundy-deep" : "h-1.5 bg-burgundy/20"
+            }`}
+          />
+        ))}
       </div>
     </div>
   );
