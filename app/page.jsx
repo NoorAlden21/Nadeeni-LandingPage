@@ -136,7 +136,10 @@ function FilmScan() {
           <span className="absolute -top-2 -end-2 h-4 w-4 border-t-2 border-e-2 border-gold" />
           <span className="absolute -bottom-2 -start-2 h-4 w-4 border-b-2 border-s-2 border-gold" />
           <span className="absolute -end-2 -bottom-2 h-4 w-4 border-e-2 border-b-2 border-gold" />
-          <QrMotif />
+          <span className="relative block overflow-hidden rounded-xl">
+            <QrMotif />
+            <span className="scan-line" aria-hidden="true" />
+          </span>
         </div>
       </div>
       <p className="mt-5 text-sm font-semibold text-burgundy">امسحوا الرمز</p>
