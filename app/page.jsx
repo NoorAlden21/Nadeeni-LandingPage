@@ -148,6 +148,38 @@ const retiredCosts = [
   "تطبيق على هاتف الزبون",
 ];
 
+const leaveReasons = [
+  {
+    title: "بلا تطبيق",
+    body: "الزبون بيمسح الرمز من المتصفح اللي معه. ما بيحمّل شي، وما بيعمل حساب.",
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+        <rect x="7" y="3" width="10" height="18" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M11 18h2" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    title: "شغل الكاشير خفيف",
+    body: "بيكتب رقم الطلب اللي عندكم، وبيضغط تنبيه لما يجهز. ما في نظام جديد يتعلّمه.",
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+        <path d="M5 7h14M5 12h9M5 17h6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    title: "الزبون ما بيوقف يسأل",
+    body: "بيتابع الصفحة من محلّه. بتتجدد وحدها خلال ثوانٍ، بلا رسائل وبلا ربط مع الصندوق.",
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+        <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M12 8v4.5l2.5 1.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+];
+
 const filmBeats = [
   {
     title: "يمسح الرمز",
@@ -437,12 +469,12 @@ const steps = [
   {
     n: "٠٣",
     title: "ضغطة تنبيه",
-    body: "عندما يجهز الطعام تضغطون «تنبيه». الصفحة المفتوحة تصبح «جاهز» خلال ثوانٍ. ضغطة ثانية لا ترسل إشعاراً آخر.",
+    body: "عندما يجهز الطعام تضغطون «تنبيه». الصفحة المفتوحة تصبح «جاهز» فورا.",
   },
   {
     n: "٠٤",
-    title: "وبعدين بيقيّم محلك",
-    body: "بعد ما يستلم، بيطلعله زر بيفتح صفحة ليترك تقييمه لحتى تقدر تتابع رضى العملاء.",
+    title: "وبالنهاية بيترك تقييم",
+    body: "بعد ما يستلم طلبه، بيطلعله زر بيفتح صفحة ليترك تقييمه لحتى تقدر تتابع رضى العملاء.",
   },
 ];
 
@@ -786,22 +818,61 @@ export default function HomePage() {
           </div>
         </motion.section>
 
-        <section id="benefits" className="relative bg-[#f7f1e4] px-5 py-24 sm:py-28">
-          <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
-            <motion.div {...rise}>
-              <p className="text-sm font-semibold tracking-wide text-gold-deep">
-                لماذا يترك المطعم الجهاز
-              </p>
-              <h2 className="mt-3 font-display text-4xl leading-tight font-bold text-burgundy-deep sm:text-5xl">
-                السؤال الذي يخرج من الصالة:
-                <span className="mt-2 block text-burgundy">«هل جهز طلبي؟»</span>
-              </h2>
-              <ul className="mt-8 space-y-5 text-lg leading-8 text-ink/80">
-                <li>الزبون لا يثبّت شيئاً. رابط في المتصفح الذي معه يكفي.</li>
-                <li>الكاشير لا يتعلم نظاماً جديداً. يكتب الرقم، ثم يضغط تنبيه.</li>
-                <li>لا حسابات للزبائن، ولا رسائل، ولا ربط مع صندوق الكاشير.</li>
+        <section id="benefits" className="relative overflow-hidden bg-[#f7f1e4] px-5 py-24 sm:py-28">
+          <div className="pointer-events-none absolute -top-20 end-[-5rem] h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
+          <div className="relative mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+            <div>
+              <motion.p
+                {...rise}
+                className="inline-flex items-center rounded-full border border-gold/60 bg-paper/80 px-3 py-1 text-sm font-medium text-burgundy"
+              >
+                ليش تستخدم ناديني
+              </motion.p>
+              <motion.h2
+                {...rise}
+                transition={{ duration: 0.55, delay: 0.05, ease: "easeOut" }}
+                className="mt-5 font-display text-4xl leading-tight font-bold text-burgundy-deep sm:text-5xl"
+              >
+                <span>الصالة بتسأل</span>{" "}
+                <span className="whitespace-nowrap">سؤال واحد</span>
+              </motion.h2>
+              <motion.p
+                className="quote-float relative mt-6 inline-block rounded-2xl rounded-ss-md bg-white px-5 py-3 font-display text-2xl font-bold text-burgundy shadow-[0_16px_40px_-24px_rgba(74,4,24,0.4)] ring-1 ring-burgundy/10"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.5, delay: 0.12, ease: "easeOut" }}
+              >
+                «هل جهز طلبي؟»
+              </motion.p>
+              <motion.p
+                {...rise}
+                transition={{ duration: 0.55, delay: 0.16, ease: "easeOut" }}
+                className="mt-6 max-w-xl text-lg leading-8 text-ink/75"
+              >
+                ناديني بيخلّي الجواب على جوال الزبون. الكاشير بيضغط تنبيه، والصفحة المفتوحة بتصير «جاهز».
+              </motion.p>
+              <ul className="mt-8 space-y-3">
+                {leaveReasons.map((reason, index) => (
+                  <motion.li
+                    key={reason.title}
+                    className="flex items-start gap-4 rounded-2xl bg-white/80 p-4 shadow-[0_16px_40px_-28px_rgba(74,4,24,0.45)] ring-1 ring-burgundy/10"
+                    initial={{ opacity: 0, y: 18 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.5 }}
+                    transition={{ duration: 0.45, delay: 0.18 + index * 0.1, ease: "easeOut" }}
+                  >
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gold/30 text-burgundy-deep">
+                      {reason.icon}
+                    </span>
+                    <div>
+                      <p className="font-display text-lg font-bold text-burgundy-deep">{reason.title}</p>
+                      <p className="mt-1 text-base leading-7 text-ink/75">{reason.body}</p>
+                    </div>
+                  </motion.li>
+                ))}
               </ul>
-            </motion.div>
+            </div>
 
             <motion.article
               {...rise}
@@ -810,18 +881,25 @@ export default function HomePage() {
             >
               <div className="absolute inset-x-6 top-0 h-4 bg-[radial-gradient(circle_at_8px_0,transparent_7px,#fffdf8_8px)] bg-[length:16px_16px]" />
               <p className="text-center font-display text-2xl font-bold text-burgundy">
-                فاتورة لن تُدفع
+                فاتورة ما بتندفع
               </p>
               <p className="mt-1 text-center text-xs text-ink/50">أجهزة النداء</p>
               <ul className="mt-6 space-y-3 text-sm">
-                {retiredCosts.map((item) => (
-                  <li key={item} className="flex items-baseline gap-3">
+                {retiredCosts.map((item, index) => (
+                  <motion.li
+                    key={item}
+                    className="flex items-baseline gap-3"
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.8 }}
+                    transition={{ duration: 0.35, delay: 0.2 + index * 0.08, ease: "easeOut" }}
+                  >
                     <span className="line-through decoration-burgundy/80">
                       {item}
                     </span>
                     <span className="mb-1 h-px flex-1 border-b border-dotted border-burgundy/25" />
                     <span className="font-semibold text-burgundy">يُلغى</span>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
               <div className="mt-6 border-t border-dashed border-gold pt-4">

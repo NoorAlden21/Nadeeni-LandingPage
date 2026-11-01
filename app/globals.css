@@ -395,6 +395,21 @@ section[id] {
   outline: none;
 }
 
+@keyframes quote-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+.quote-float {
+  animation: quote-float 4.5s ease-in-out infinite;
+}
+
 @keyframes pager-buzz {
   0%,
   100% {
@@ -429,6 +444,7 @@ section[id] {
   .story-screen,
   .story-dot,
   .intro-ring,
+  .quote-float,
   .film-pane-0,
   .film-pane-1,
   .film-pane-2,
