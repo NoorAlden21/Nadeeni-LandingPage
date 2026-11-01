@@ -702,9 +702,9 @@ export default function HomePage() {
             <a href="#steps" className="transition-colors hover:text-burgundy">
               الطريقة
             </a>
-            <a href="#modes" className="transition-colors hover:text-burgundy">
+            {/* <a href="#modes" className="transition-colors hover:text-burgundy">
               الرمز
-            </a>
+            </a> */}
           </nav>
           <a
             href="#contact"
@@ -753,7 +753,7 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => setDemoOpen(true)}
-                  className="rounded-2xl bg-burgundy px-7 py-3.5 font-semibold text-ivory shadow-[0_16px_40px_-18px_rgba(126,6,42,0.9)] transition duration-300 hover:-translate-y-0.5 hover:bg-burgundy-deep hover:shadow-[0_14px_28px_-12px_rgba(74,4,24,0.55)]"
+                  className="cursor-pointer rounded-2xl bg-burgundy px-7 py-3.5 font-semibold text-ivory shadow-[0_16px_40px_-18px_rgba(126,6,42,0.9)] transition duration-300 hover:-translate-y-0.5 hover:bg-burgundy-deep hover:shadow-[0_14px_28px_-12px_rgba(74,4,24,0.55)]"
                 >
                   جرّب النداء بنفسك
                 </button>
@@ -846,7 +846,7 @@ export default function HomePage() {
 
         <CompareSection />
 
-        <section id="modes" className="bg-[#f7f1e4] px-5 py-24 sm:py-28">
+        {/* <section id="modes" className="bg-[#f7f1e4] px-5 py-24 sm:py-28">
           <div className="mx-auto max-w-6xl">
             <motion.div {...rise} className="max-w-2xl">
               <h2 className="font-display text-4xl leading-tight font-bold text-burgundy-deep sm:text-5xl">
@@ -900,7 +900,7 @@ export default function HomePage() {
               الصفحة المفتوحة تتجدد وحدها خلال ثوانٍ، بلا زر تحديث. الإشعار يصل حيث يدعم المتصفح ذلك، وعلى آيفون بعد إضافة الموقع إلى الشاشة الرئيسية. الصفحة هي المرجع، ولا نعد بأن الإشعار وصل إلى يد الزبون.
             </p>
           </div>
-        </section>
+        </section> */}
 
         {/* <section id="request" className="relative overflow-hidden bg-gold px-5 py-24 sm:py-28">
           <div
@@ -1068,7 +1068,7 @@ export default function HomePage() {
               <a href="#benefits" className="transition-colors hover:text-gold">لماذا ناديني</a>
               <a href="#steps" className="transition-colors hover:text-gold">الطريقة</a>
               <a href="#compare" className="transition-colors hover:text-gold">المقارنة</a>
-              <a href="#modes" className="transition-colors hover:text-gold">الرمز</a>
+              {/* <a href="#modes" className="transition-colors hover:text-gold">الرمز</a> */}
             </nav>
 
             <div className="flex gap-2.5">
