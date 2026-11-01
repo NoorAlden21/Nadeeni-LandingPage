@@ -320,10 +320,10 @@ function StoryScan() {
 
 function FilmOrder() {
   return (
-    <div className="flex h-full flex-col items-center justify-center bg-ivory px-4 text-center">
-      <p className="text-sm font-medium text-burgundy">اسم مطعمكم</p>
-      <p className="mt-3 font-sans text-6xl leading-none font-bold text-burgundy-deep">{orderNo}</p>
-      <p className="mt-2 text-xs text-ink/55">رقم الطلب</p>
+    <div className="flex h-full justify-center">
+      <div className="h-[440px] w-[244px] origin-top scale-[0.68] sm:scale-[0.82]">
+        <StageWait live name="مطعم الشام" />
+      </div>
     </div>
   );
 }
@@ -480,7 +480,7 @@ const steps = [
 
 const whatsappHref =
   "https://wa.me/963946431543?text=" +
-  encodeURIComponent("مرحبا، بدي أجرّب ناديني لمحلي");
+  encodeURIComponent("مرحبا، بدي أجرّب ناديني لمطعمي");
 const instagramHref = "https://www.instagram.com/nadeeni.sy/";
 
 const demoBeats = [
@@ -734,6 +734,9 @@ export default function HomePage() {
             <a href="#steps" className="transition-colors hover:text-burgundy">
               الطريقة
             </a>
+            <a href="#compare" className="transition-colors hover:text-burgundy">
+              المقارنة
+            </a>
             {/* <a href="#modes" className="transition-colors hover:text-burgundy">
               الرمز
             </a> */}
@@ -758,7 +761,7 @@ export default function HomePage() {
           <div className="pointer-events-none absolute top-40 end-[-4rem] h-80 w-80 rounded-full bg-foam blur-3xl" />
 
           <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 pt-12 pb-8 lg:grid-cols-[1.15fr_0.85fr] lg:pt-16 lg:pb-20">
-            <div>
+            <div className="@container min-w-0">
               <p className="inline-flex items-center gap-2 rounded-full border border-gold/60 bg-paper/80 px-3 py-1 text-sm font-medium text-burgundy">
                 <span className="relative h-5 w-5" aria-hidden="true">
                   <span className="absolute bottom-0.5 left-1/2 h-1.5 w-4 -translate-x-1/2 rounded-full bg-gold" />
@@ -781,23 +784,23 @@ export default function HomePage() {
               <p className="mt-5 max-w-xl text-lg leading-8 text-ink/75">
               الزبون بيقعد مرتاح وبيتابع طلبه من متصفح موبايله بدون ما يحمّل أي تطبيق. وبس يجهز الأكل؟ تنبيه فوري بيوصله ليستلمه              </p>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+              <div className="mt-8 flex flex-nowrap items-center gap-2 @max-[340px]:gap-1.5 md:gap-3">
                 <button
                   type="button"
                   onClick={() => setDemoOpen(true)}
-                  className="cursor-pointer rounded-2xl bg-burgundy px-7 py-3.5 font-semibold text-ivory shadow-[0_16px_40px_-18px_rgba(126,6,42,0.9)] transition duration-300 hover:-translate-y-0.5 hover:bg-burgundy-deep hover:shadow-[0_14px_28px_-12px_rgba(74,4,24,0.55)]"
+                  className="cursor-pointer whitespace-nowrap rounded-2xl bg-burgundy px-3 py-2.5 text-sm font-semibold text-ivory shadow-[0_16px_40px_-18px_rgba(126,6,42,0.9)] transition duration-300 hover:-translate-y-0.5 hover:bg-burgundy-deep hover:shadow-[0_14px_28px_-12px_rgba(74,4,24,0.55)] @max-[340px]:px-1.5 @max-[340px]:text-[11px] md:px-7 md:py-3.5 md:text-base"
                 >
                   جرّب النداء بنفسك
                 </button>
                 <a
                   href="#contact"
-                  className="rounded-2xl border border-burgundy/15 bg-white/80 px-7 py-3.5 font-semibold text-burgundy transition duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-paper hover:shadow-[0_14px_28px_-14px_rgba(140,110,44,0.45)]"
+                  className="whitespace-nowrap rounded-2xl border border-burgundy/15 bg-white/80 px-3 py-2.5 text-sm font-semibold text-burgundy transition duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-paper hover:shadow-[0_14px_28px_-14px_rgba(140,110,44,0.45)] @max-[340px]:px-1.5 @max-[340px]:text-[11px] md:px-7 md:py-3.5 md:text-base"
                 >
                   اطلبوا التجربة
                 </a>
                 <a
                   href="#steps"
-                  className="rounded-2xl border border-burgundy/15 bg-white/80 px-7 py-3.5 font-semibold text-burgundy transition duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-paper hover:shadow-[0_14px_28px_-14px_rgba(140,110,44,0.45)]"
+                  className="whitespace-nowrap rounded-2xl border border-burgundy/15 bg-white/80 px-3 py-2.5 text-sm font-semibold text-burgundy transition duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-paper hover:shadow-[0_14px_28px_-14px_rgba(140,110,44,0.45)] @max-[340px]:px-1.5 @max-[340px]:text-[11px] md:px-7 md:py-3.5 md:text-base"
                 >
                   شاهدوا الطريقة
                 </a>
@@ -1242,14 +1245,14 @@ function StagePhone() {
   );
 }
 
-function StageWait({ live }) {
+function StageWait({ live, name = "اسم مطعمكم" }) {
   return (
     <div className="flex h-full flex-col items-center px-4 pt-12 text-center">
       <div className="flex items-center gap-2 rounded-full bg-white px-3 py-1.5 shadow-sm ring-1 ring-gold/40">
         <span className="grid h-6 w-6 place-items-center rounded-md bg-gold text-xs font-bold text-burgundy-deep">
           ن
         </span>
-        <span className="text-sm font-semibold text-burgundy-deep">اسم مطعمكم</span>
+        <span className="text-sm font-semibold text-burgundy-deep">{name}</span>
       </div>
       <p className="mt-7 text-xs tracking-wide text-ink/50">رقم الطلب</p>
       <p className="mt-1 font-sans text-7xl leading-none font-bold text-burgundy-deep">{orderNo}</p>
