@@ -1,7 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
+import posthog from "posthog-js";
 import { useEffect, useRef, useState } from "react";
+
+function trackClick(event, label) {
+  if (!posthog.__loaded) return;
+  posthog.capture(event, { label });
+}
 
 function BrandMark({ className = "h-14 w-14" }) {
   return (
@@ -743,6 +749,7 @@ export default function HomePage() {
           </nav>
           <a
             href="#contact"
+            onClick={() => trackClick("header_request_trial_clicked", "اطلبوا التجربة")}
             className="rounded-2xl bg-burgundy px-4 py-2.5 text-sm font-semibold text-ivory shadow-[0_10px_30px_-12px_rgba(126,6,42,0.8)] transition duration-300 hover:-translate-y-0.5 hover:bg-burgundy-deep hover:shadow-[0_12px_26px_-12px_rgba(74,4,24,0.55)]"
           >
             اطلبوا التجربة
@@ -787,19 +794,24 @@ export default function HomePage() {
               <div className="mt-8 flex flex-nowrap items-center gap-2 @max-[340px]:gap-1.5 md:gap-3">
                 <button
                   type="button"
-                  onClick={() => setDemoOpen(true)}
+                  onClick={() => {
+                    trackClick("hero_try_demo_clicked", "جرّب النداء بنفسك");
+                    setDemoOpen(true);
+                  }}
                   className="cursor-pointer whitespace-nowrap rounded-2xl bg-burgundy px-3 py-2.5 text-sm font-semibold text-ivory shadow-[0_16px_40px_-18px_rgba(126,6,42,0.9)] transition duration-300 hover:-translate-y-0.5 hover:bg-burgundy-deep hover:shadow-[0_14px_28px_-12px_rgba(74,4,24,0.55)] @max-[340px]:px-1.5 @max-[340px]:text-[11px] md:px-7 md:py-3.5 md:text-base"
                 >
                   جرّب النداء بنفسك
                 </button>
                 <a
                   href="#contact"
+                  onClick={() => trackClick("hero_request_trial_clicked", "اطلبوا التجربة")}
                   className="whitespace-nowrap rounded-2xl border border-burgundy/15 bg-white/80 px-3 py-2.5 text-sm font-semibold text-burgundy transition duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-paper hover:shadow-[0_14px_28px_-14px_rgba(140,110,44,0.45)] @max-[340px]:px-1.5 @max-[340px]:text-[11px] md:px-7 md:py-3.5 md:text-base"
                 >
                   اطلبوا التجربة
                 </a>
                 <a
                   href="#steps"
+                  onClick={() => trackClick("hero_watch_how_clicked", "شاهدوا الطريقة")}
                   className="whitespace-nowrap rounded-2xl border border-burgundy/15 bg-white/80 px-3 py-2.5 text-sm font-semibold text-burgundy transition duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-paper hover:shadow-[0_14px_28px_-14px_rgba(140,110,44,0.45)] @max-[340px]:px-1.5 @max-[340px]:text-[11px] md:px-7 md:py-3.5 md:text-base"
                 >
                   شاهدوا الطريقة
@@ -1103,6 +1115,7 @@ export default function HomePage() {
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackClick("whatsapp_clicked", "احكي معنا عالواتساب")}
               className="flex items-center gap-4 rounded-[1.25rem] bg-gold px-5 py-4 text-burgundy-deep transition duration-300 hover:-translate-y-0.5 hover:bg-[#d7b45a]"
             >
               <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-burgundy-deep text-gold" aria-hidden="true">
@@ -1120,6 +1133,7 @@ export default function HomePage() {
               href={instagramHref}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackClick("instagram_clicked", "تابعنا على انستغرام")}
               className="flex items-center gap-4 rounded-[1.25rem] bg-white/10 px-5 py-4 text-ivory ring-1 ring-white/15 transition duration-300 hover:-translate-y-0.5 hover:bg-white/15"
             >
               <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/10" aria-hidden="true">
