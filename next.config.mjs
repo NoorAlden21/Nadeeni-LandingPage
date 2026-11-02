@@ -4,6 +4,23 @@ const nextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   allowedDevOrigins: ["10.2.0.2", "192.168.137.1"],
+  skipTrailingSlashRedirect: true,
+  async rewrites() {
+    return [
+      {
+        source: "/ingest/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/ingest/array/:path*",
+        destination: "https://us-assets.i.posthog.com/array/:path*",
+      },
+      {
+        source: "/ingest/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
