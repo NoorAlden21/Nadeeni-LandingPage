@@ -410,6 +410,23 @@ section[id] {
   animation: quote-float 4.5s ease-in-out infinite;
 }
 
+.menu-live {
+  animation: menu-live 1.8s ease-in-out infinite;
+}
+
+@keyframes menu-live {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+
 @keyframes pager-buzz {
   0%,
   100% {
@@ -445,6 +462,7 @@ section[id] {
   .story-dot,
   .intro-ring,
   .quote-float,
+  .menu-live,
   .film-pane-0,
   .film-pane-1,
   .film-pane-2,
