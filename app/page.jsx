@@ -9,30 +9,20 @@ function trackClick(event, label) {
   posthog.capture(event, { label });
 }
 
-function BrandMark({ className = "h-14 w-14" }) {
+function BrandMark({ className = "h-14 w-12" }) {
   return (
-    <span className={`relative block overflow-hidden ${className}`}>
+    <span className={`relative block ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/logo.png"
-        alt="Nadeeni Logo"
-        className="absolute max-w-none"
-        style={{ width: "297%", height: "auto", left: "-108%", top: "-219%" }}
-      />
+      <img src="/logo.png" alt="Nadeeni Logo" className="h-full w-full object-contain" />
     </span>
   );
 }
 
-function BrandIcon({ className = "h-[54px] w-[54px]" }) {
+function BrandIcon({ className = "h-[54px] w-12" }) {
   return (
-    <span className={`relative block shrink-0 overflow-hidden rounded-2xl bg-ivory ${className}`} aria-hidden="true">
+    <span className={`relative grid shrink-0 place-items-center overflow-hidden rounded-2xl bg-ivory p-1 ${className}`} aria-hidden="true">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/logo.png"
-        alt=""
-        className="absolute max-w-none"
-        style={{ width: "403%", height: "auto", left: "-156%", top: "-268%" }}
-      />
+      <img src="/logo.png" alt="" className="h-full w-full object-contain" />
     </span>
   );
 }
@@ -129,13 +119,9 @@ function ReadyLines({ titleClassName, detailClassName }) {
 
 function FormMark() {
   return (
-    <div className="relative mx-auto mb-7 h-28 w-28 overflow-hidden rounded-[1.5rem] bg-ivory ring-1 ring-gold/50">
+    <div className="relative mx-auto mb-7 grid h-28 w-24 place-items-center overflow-hidden rounded-[1.5rem] bg-ivory p-2 ring-1 ring-gold/50">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/logo.png"
-        alt="Nadeeni Logo"
-        className="absolute top-1/2 left-1/2 h-[300%] w-auto max-w-none -translate-x-1/2 -translate-y-[46%] object-contain object-center"
-      />
+      <img src="/logo.png" alt="Nadeeni Logo" className="h-full w-full object-contain" />
     </div>
   );
 }
