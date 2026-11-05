@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import posthog from "posthog-js";
 import { useEffect, useRef, useState } from "react";
 
@@ -306,6 +306,9 @@ function StoryScan() {
       <div className="mt-2 grid h-10 place-items-center rounded-xl bg-gold text-sm font-bold text-burgundy-deep">
         تابع طلبي
       </div>
+      <div className="mt-2 grid h-9 place-items-center rounded-full border border-[#e7d3c0] bg-[#fff6ea] text-[13px] font-bold text-gold-deep">
+        تصفح القائمة
+      </div>
     </div>
   );
 }
@@ -366,7 +369,7 @@ function StoryWait() {
       <p className="mt-1 text-center font-sans text-[2.6rem] leading-none font-bold text-burgundy-deep" dir="ltr">
         215
       </p>
-      <div className="relative mx-auto mt-4 grid h-36 w-36 place-items-center">
+      <div className="relative mx-auto mt-3 grid h-28 w-28 place-items-center">
         <svg viewBox="0 0 100 100" className="-rotate-90" aria-hidden="true">
           <circle cx="50" cy="50" r={radius} fill="none" strokeWidth="8" className="stroke-gold/20" />
           <circle
@@ -389,7 +392,10 @@ function StoryWait() {
           <p className="mt-1 text-[10px] font-medium text-ink/50">دقائق تقريباً</p>
         </div>
       </div>
-      <div className="mt-auto flex items-center justify-between rounded-2xl bg-foam px-3 py-2.5">
+      <div className="mt-auto grid h-9 place-items-center rounded-full border border-[#e7d3c0] bg-[#fff6ea] text-[13px] font-bold text-burgundy">
+        العب وأنت تنتظر
+      </div>
+      <div className="mt-2 flex items-center justify-between rounded-2xl bg-foam px-3 py-2.5">
         <span className="text-[11px] font-semibold text-ink/55">جاهز حوالي</span>
         <b className="font-sans text-sm font-bold text-burgundy-deep" dir="ltr">
           9:46
@@ -451,12 +457,12 @@ const steps = [
   {
     n: "٠١",
     title: "العميل بيمسح الكود اللي عالكاونتر",
-    body: "بكاميرا جواله، بدون تطبيق وبدون حساب. بيكتب رقم طلبه وخلص.",
+    body: "بكاميرا جواله، بدون تطبيق وبدون حساب. بيكتب رقم طلبه، وقدر يضغط «تصفح القائمة».",
   },
   {
     n: "٠٢",
     title: "بيشوف كم باقي لطلبه",
-    body: "تايمر قدامه طول الوقت، فبيقعد مرتاح بدل ما يضل واقف عالكاونتر يسأل.",
+    body: "تايمر قدامه طول الوقت، وتحت الزر «العب وأنت تنتظر». ما بيوقف على الكاونتر يسأل.",
   },
   {
     n: "٠٣",
@@ -729,9 +735,6 @@ export default function HomePage() {
             <a href="#menu" className="transition-colors hover:text-burgundy">
               المنيو
             </a>
-            <a href="#game" className="transition-colors hover:text-burgundy">
-              اللعبة
-            </a>
             <a href="#compare" className="transition-colors hover:text-burgundy">
               المقارنة
             </a>
@@ -929,9 +932,7 @@ export default function HomePage() {
 
         <StepsStory />
 
-        <MenuSection />
-
-        <GameSection />
+        <MenuBrowseSection />
 
         <CompareSection />
 
@@ -1159,7 +1160,6 @@ export default function HomePage() {
               <a href="#benefits" className="transition-colors hover:text-gold">لماذا ناديني</a>
               <a href="#steps" className="transition-colors hover:text-gold">الطريقة</a>
               <a href="#menu" className="transition-colors hover:text-gold">المنيو</a>
-              <a href="#game" className="transition-colors hover:text-gold">اللعبة</a>
               <a href="#compare" className="transition-colors hover:text-gold">المقارنة</a>
               {/* <a href="#modes" className="transition-colors hover:text-gold">الرمز</a> */}
             </nav>
@@ -1291,9 +1291,17 @@ function StageWait({ live, name = "اسم مطعمكم" }) {
           </div>
         </div>
       </div>
-      <p className="mt-5 rounded-full bg-gold/30 px-4 py-1.5 text-sm font-semibold text-burgundy-deep">
+      <p className="mt-4 rounded-full bg-gold/30 px-4 py-1.5 text-sm font-semibold text-burgundy-deep">
         يُحضَّر
       </p>
+      <div className="mt-auto mb-4 flex w-full flex-col gap-2">
+        <div className="rounded-full border border-[#e7d3c0] bg-[#fff6ea] px-3 py-2 text-sm font-bold text-burgundy">
+          العب وأنت تنتظر
+        </div>
+        <div className="rounded-full border border-[#e7d3c0] bg-[#fff6ea] px-3 py-2 text-sm font-bold text-gold-deep">
+          تصفح القائمة
+        </div>
+      </div>
     </div>
   );
 }
@@ -1319,428 +1327,198 @@ function StageReady() {
   );
 }
 
-const menuDishes = [
+const menuLeaves = [
   {
-    name: "شاورما عربي",
-    detail: "دجاج، ثوم، وبطاطا",
-    price: "٣٥",
-    icon: "wrap",
+    name: "سندويش",
+    dishes: [
+      { name: "شاورما عربي", detail: "دجاج، ثوم، وبطاطا", note: "خبز عربي، دجاج مشوي، صلصة ثوم، وبطاطا مقلية.", price: "٣٥", image: "/menu/shawarma.jpg" },
+      { name: "صحن فلافل", detail: "حمص، سلطة، وخبز", note: "كرات فلافل، حمص، سلطة، ومخلل.", price: "١٨", image: "/menu/falafel.jpg" },
+      { name: "كباب لحم", detail: "بقدونس وبصل", note: "سيخ لحم مشوي، بقدونس، وبصل.", price: "٤٢", image: "/menu/kebab.jpg" },
+    ],
   },
   {
-    name: "صحن فلافل",
-    detail: "حمص، سلطة، وخبز",
-    price: "١٨",
-    icon: "plate",
+    name: "مشروبات",
+    dishes: [
+      { name: "ليمون ونعناع", detail: "كأس طازج", note: "ليمون معصور، نعناع، وثلج.", price: "١٠", image: "/menu/lemon-mint.jpg" },
+      { name: "شاي مغربي", detail: "نعناع وسكّر", note: "شاي أخضر، نعناع فريش، وسكّر خفيف.", price: "٨", image: "/menu/mint-tea.jpg" },
+      { name: "عيران", detail: "بارد ومملّح", note: "لبن مخيوض، ملح، ومبرّد.", price: "٦", image: "/menu/ayran.jpg" },
+    ],
   },
   {
-    name: "ليمون ونعناع",
-    detail: "كأس طازج",
-    price: "١٠",
-    icon: "cup",
-  },
-];
-
-const menuNotes = [
-  {
-    title: "بلا منيو ورقي",
-    body: "السعر والصنف بيتحدثوا من عندكم، والزبون دايماً شايفاً النسخة الجديدة.",
-    icon: (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-        <path d="M7 4.5h8.5L19 8v11.5H7z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-        <path d="M15 4.5V8h4M9.5 12h5M9.5 15.5h5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
-    title: "على نفس الصفحة",
-    body: "ما في رابط ثاني. المنيو فوق، ورقم طلبه تحت، على جواله.",
-    icon: (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-        <rect x="7" y="3" width="10" height="18" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M9.5 7.5h5M9.5 11h5M9.5 14.5h3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
-    title: "وهو قاعد",
-    body: "بيملا وقت الانتظار من كرسيه، بدل ما يوقف على الكاونتر يسأل.",
-    icon: (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-        <path d="M5 11h14v2.5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V11Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-        <path d="M7 11V8.5A2.5 2.5 0 0 1 9.5 6h5A2.5 2.5 0 0 1 17 8.5V11M8 15.5V19M16 15.5V19" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    ),
+    name: "حلويات",
+    dishes: [
+      { name: "كنافة", detail: "جبنة وقشطة", note: "عجينة كنافة، جبنة، قطر، وفستق.", price: "٢٢", image: "/menu/knafeh.jpg" },
+      { name: "بقلاوة", detail: "فستق حلبي", note: "طبقات عجين، قطر، وفستق حلبي.", price: "١٦", image: "/menu/baklava.jpg" },
+      { name: "مهلبية", detail: "ماء ورد", note: "حليب، ماء ورد، وفستق مهروس.", price: "١٢", image: "/menu/muhallabia.jpg" },
+    ],
   },
 ];
 
-function MenuIcon({ name }) {
-  const pen = {
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.7,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-  };
+const menuShow = menuLeaves.flatMap((_, leafIndex) => [
+  { leafIndex, dishIndex: 0, detail: false },
+  { leafIndex, dishIndex: 1, detail: false },
+  { leafIndex, dishIndex: 2, detail: false },
+  { leafIndex, dishIndex: 2, detail: true },
+]);
 
-  if (name === "plate") {
-    return (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-        <circle cx="12" cy="12" r="7.5" {...pen} />
-        <circle cx="12" cy="12" r="3" {...pen} />
-        <path d="M12 4.5v2M12 17.5v2M4.5 12h2M17.5 12h2" {...pen} />
-      </svg>
-    );
-  }
+const paperLines = [
+  ["شاورما", "٢٥"],
+  ["فلافل", "١٢"],
+  ["عصير", "٧"],
+];
 
-  if (name === "cup") {
-    return (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-        <path d="M7 8h8.5v5.5a4 4 0 0 1-4 4H11a4 4 0 0 1-4-4V8Z" {...pen} />
-        <path d="M15.5 9.5H18a2 2 0 0 1 0 4h-2.5M8 20.5h8" {...pen} />
-      </svg>
-    );
-  }
+function MenuBrowseSection() {
+  const [step, setStep] = useState(0);
+  const frame = menuShow[step];
+  const leaf = menuLeaves[frame.leafIndex];
+  const dish = leaf.dishes[frame.dishIndex];
+  const open = frame.detail ? { ...dish, category: leaf.name } : null;
 
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path d="M5 10c1.4-4 12.6-4 14 0" {...pen} />
-      <path d="M6.5 10.5h11l-.7 6a3 3 0 0 1-3 2.6h-3.6a3 3 0 0 1-3-2.6l-.7-6Z" {...pen} />
-      <path d="M9 10.2c.5 2 1.3 3 3 3s2.5-1 3-3" {...pen} />
-    </svg>
-  );
-}
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const id = window.setTimeout(() => {
+      setStep((current) => (current + 1) % menuShow.length);
+    }, frame.detail ? 2800 : 1300);
+    return () => window.clearTimeout(id);
+  }, [step, frame.detail]);
 
-function MenuScreen() {
-  return (
-    <div className="flex h-full flex-col bg-[linear-gradient(180deg,#fffdf8_0%,#fdfaf1_55%,#f8e8ed_100%)]">
-      <div className="px-3 pt-10">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex min-w-0 items-center gap-1.5">
-            <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-gold text-[11px] font-bold text-burgundy-deep">
-              ن
-            </span>
-            <span className="truncate text-xs font-bold text-burgundy-deep">اسم مطعمكم</span>
-          </div>
-          <span className="shrink-0 rounded-full bg-burgundy px-2 py-0.5 text-[10px] font-bold text-ivory">المنيو</span>
-        </div>
-        <div className="mt-3 flex gap-1">
-          {["سندويش", "مشروبات", "حلويات"].map((label, index) => (
-            <span
-              key={label}
-              className={`rounded-full px-2 py-1 text-[10px] font-bold ${
-                index === 0
-                  ? "bg-burgundy text-ivory"
-                  : "bg-white text-ink/45 ring-1 ring-burgundy/10"
-              }`}
-            >
-              {label}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <ul className="mt-3 space-y-1.5 px-2.5">
-        {menuDishes.map((dish, index) => (
-          <motion.li
-            key={dish.name}
-            className={`flex items-center gap-2 rounded-2xl px-2 py-1.5 ring-1 ${
-              index === 0
-                ? "bg-white shadow-[0_10px_24px_-16px_rgba(126,6,42,0.55)] ring-gold/70"
-                : "bg-white/80 ring-burgundy/10"
-            }`}
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 0.4, delay: 0.12 + index * 0.08, ease: "easeOut" }}
-          >
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-foam text-burgundy">
-              <MenuIcon name={dish.icon} />
-            </span>
-            <span className="min-w-0 flex-1 text-start">
-              <span className="block truncate text-[12px] leading-4 font-bold text-burgundy-deep">{dish.name}</span>
-              <span className="mt-0.5 block truncate text-[10px] leading-3 text-ink/50">{dish.detail}</span>
-            </span>
-            <span className="font-sans text-sm font-bold text-gold-deep">{dish.price}</span>
-          </motion.li>
-        ))}
-      </ul>
-
-      <div className="mx-2.5 mt-auto mb-3 flex items-center gap-2 rounded-2xl bg-burgundy-deep px-2.5 py-2 text-ivory shadow-[0_14px_28px_-18px_rgba(74,4,24,0.8)]">
-        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gold font-sans text-xs font-bold text-burgundy-deep">
-          {orderNo}
-        </span>
-        <span className="min-w-0 flex-1 text-start">
-          <span className="flex items-center gap-1.5 text-[11px] font-bold">
-            <span className="menu-live h-1.5 w-1.5 rounded-full bg-gold" />
-            طلبك يُحضَّر
-          </span>
-          <span className="mt-0.5 block text-[10px] text-gold">المنيو قدامك وأنت تنتظر</span>
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function MenuStage() {
-  const paperLines = ["شاورما", "فلافل", "مشاوي", "عصائر", "حلويات"];
-
-  return (
-    <div className="relative mx-auto w-full max-w-[26rem] py-4">
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/25 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-[23rem] w-[23rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-gold/40" aria-hidden="true" />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-[18rem] w-[18rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-burgundy/15" aria-hidden="true" />
-
-      <div className="absolute top-20 end-1 z-0 hidden w-36 rotate-[7deg] overflow-hidden rounded-[1.2rem] bg-paper px-3.5 py-4 shadow-[0_18px_40px_-24px_rgba(74,4,24,0.45)] ring-1 ring-gold/50 sm:block">
-        <p className="text-end font-display text-sm font-bold text-burgundy/80">منيو ورقي</p>
-        <ul className="mt-3 space-y-2">
-          {paperLines.map((line) => (
-            <li key={line} className="flex items-center gap-2 text-[11px] text-ink/35">
-              <span className="h-px flex-1 border-b border-dotted border-burgundy/20" />
-              <span className="line-through decoration-burgundy/50">{line}</span>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-3 text-end text-[10px] font-semibold text-burgundy/50">يُعاد طبعه</p>
-      </div>
-
-      <motion.div
-        className="absolute top-6 start-0 z-20 hidden rounded-2xl bg-white px-3 py-2 shadow-[0_16px_36px_-22px_rgba(74,4,24,0.55)] ring-1 ring-gold/60 sm:block"
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.6 }}
-        transition={{ duration: 0.45, delay: 0.2, ease: "easeOut" }}
-      >
-        <p className="text-[11px] font-semibold text-ink/45">نفس الرمز</p>
-        <p className="font-display text-sm font-bold text-burgundy">منيو ونداء</p>
-      </motion.div>
-
-      <div className="stage-float relative z-10 mx-auto w-fit">
-        <PhoneShell {...phoneShells.story}>
-          <MenuScreen />
-        </PhoneShell>
-      </div>
-    </div>
-  );
-}
-
-function MenuSection() {
   return (
     <section
       id="menu"
-      className="relative overflow-hidden bg-[radial-gradient(90%_80%_at_100%_0%,#fffdf8_0%,#f8e8ed_46%,#f3e6c8_100%)] px-5 py-24 sm:py-28"
+      className="relative overflow-hidden bg-[radial-gradient(90%_80%_at_100%_0%,#fffdf8_0%,#f8e8ed_46%,#f3e6c8_100%)] px-5 py-16 sm:py-20"
       aria-labelledby="menu-title"
     >
-      <div className="pointer-events-none absolute -bottom-24 start-[-4rem] h-72 w-72 rounded-full bg-white/50 blur-3xl" />
-      <div className="relative mx-auto max-w-6xl">
-        <div className="grid items-center gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:gap-12">
-          <div className="order-2 lg:order-none">
-            <motion.h2
-              {...rise}
-              id="menu-title"
-              className="font-display text-4xl leading-tight font-bold text-burgundy-deep sm:text-5xl"
-            >
-              وهو ينتظر،
-              <span className="mt-1 block">
-                <span className="relative inline-block">
-                  المنيو قدامه
-                  <span className="absolute -bottom-1 start-0 h-[0.42rem] w-full rounded-full bg-gold sm:h-2" />
-                </span>
+      <div className="pointer-events-none absolute top-16 end-[-4rem] h-64 w-64 rounded-full bg-gold/25 blur-3xl" />
+      <div className="relative mx-auto max-w-5xl">
+        <motion.div {...rise} className="max-w-2xl">
+          <h2 id="menu-title" className="font-display text-4xl leading-tight font-bold text-burgundy-deep sm:text-5xl">
+            تصفح القائمة،
+            <span className="mt-1 block">
+              <span className="relative inline-block">
+                من غير ورقة
+                <span className="absolute -bottom-1 start-0 h-[0.42rem] w-full rounded-full bg-gold sm:h-2" />
               </span>
-            </motion.h2>
-            <motion.p
-              {...rise}
-              transition={{ duration: 0.55, delay: 0.1, ease: "easeOut" }}
-              className="mt-6 max-w-xl text-lg leading-8 text-ink/75"
-            >
-              الرمز نفسه اللي بيفتح متابعة الطلب بيفتح منيو مطعمكم. بلا ورقة، وبلا تطبيق، وبلا ما يسأل الموظف «شو عندكم؟».
-            </motion.p>
+            </span>
+          </h2>
+          <p className="mt-5 text-lg leading-8 text-ink/75">
+            الورقة بتنطبع وبتخلّص. الشاشة بتضل قدام الزبون، وبيتصفحها من صفحة الطلب.
+          </p>
+        </motion.div>
+
+        <div className="mt-12 grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+          <div className="relative mx-auto w-full max-w-sm lg:mx-0">
+            <span className="absolute inset-x-4 top-4 bottom-2 -rotate-6 rounded-sm bg-[#e4d5b4] shadow-[0_12px_24px_-18px_rgba(74,4,24,0.6)]" aria-hidden="true" />
+            <article className="relative rotate-[2.5deg] bg-[#f7f1e2] px-6 py-7 shadow-[0_22px_40px_-26px_rgba(74,4,24,0.55)] [background-image:repeating-linear-gradient(180deg,transparent,transparent_27px,rgba(126,6,42,0.08)_28px)]">
+              <span className="absolute top-0 end-0 h-9 w-9 bg-[linear-gradient(225deg,#e6d3a8_50%,transparent_50%)] shadow-[-6px_6px_10px_-8px_rgba(74,4,24,0.45)]" aria-hidden="true" />
+              <p className="text-center font-display text-2xl font-bold text-burgundy-deep">قائمة الطعام</p>
+              <span className="mx-auto mt-2 block h-px w-16 bg-burgundy/30" />
+              <ul className="mt-5 space-y-3">
+                {paperLines.map(([name, price]) => (
+                  <li key={name} className="flex items-baseline gap-2 text-burgundy-deep/80">
+                    <span className="font-display text-lg">{name}</span>
+                    <span className="mb-1 h-px flex-1 border-b border-dotted border-burgundy/30" />
+                    <span className="font-sans text-base">{price}</span>
+                  </li>
+                ))}
+                <li className="flex items-baseline gap-2 text-ink/40">
+                  <span className="font-display text-lg line-through decoration-burgundy/50">عصير موسمي</span>
+                  <span className="mb-1 h-px flex-1 border-b border-dotted border-burgundy/20" />
+                  <span className="font-sans text-base line-through decoration-burgundy/50">٩</span>
+                </li>
+              </ul>
+              <p className="mt-6 text-center text-xs text-ink/45">طبعة قديمة · تُعاد طباعتها</p>
+            </article>
+            <p className="relative z-10 mt-14 text-center text-sm font-semibold text-burgundy/70">منيو ورقي</p>
           </div>
-          <div className="order-1 lg:order-none">
-            <MenuStage />
+
+          <div className="flex justify-center">
+            <div>
+              <PhoneShell {...phoneShells.story}>
+                <div className="flex h-full flex-col bg-[#fffdf8] px-2.5 pt-10 pb-3">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[11px] font-bold text-burgundy-deep">{open ? "تفاصيل الصنف" : "منيو ذكي"}</p>
+                    <span className="menu-live h-1.5 w-1.5 rounded-full bg-gold-deep" aria-hidden="true" />
+                  </div>
+                  <div className="mt-3 min-h-0 flex-1">
+                    <AnimatePresence mode="wait">
+                      {open ? (
+                        <motion.div
+                          key={open.name}
+                          initial={{ opacity: 0, x: -16 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 16 }}
+                          transition={{ duration: 0.3, ease: "easeOut" }}
+                        >
+                          <p className="text-[11px] font-bold text-burgundy">رجوع للقائمة</p>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={open.image} alt="" className="mt-2 h-36 w-full rounded-xl object-cover" />
+                          <div className="mt-3 flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <p className="text-[11px] font-bold text-gold-deep">{open.category}</p>
+                              <p className="truncate font-display text-lg font-bold text-burgundy-deep">{open.name}</p>
+                            </div>
+                            <p className="font-sans text-lg font-bold text-gold-deep">{open.price}</p>
+                          </div>
+                          <p className="mt-1 text-[11px] leading-5 text-ink/70">{open.note}</p>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key={leaf.name}
+                          initial={{ opacity: 0, x: 16 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -16 }}
+                          transition={{ duration: 0.3, ease: "easeOut" }}
+                        >
+                          <div className="flex gap-1" aria-hidden="true">
+                            {menuLeaves.map((item, index) => (
+                              <span
+                                key={item.name}
+                                className={`rounded-full px-2 py-1 text-[10px] font-bold transition-colors duration-300 ${
+                                  index === frame.leafIndex ? "bg-burgundy text-ivory" : "bg-white text-ink/40 ring-1 ring-burgundy/10"
+                                }`}
+                              >
+                                {item.name}
+                              </span>
+                            ))}
+                          </div>
+                          <ul className="mt-3 space-y-1.5">
+                            {leaf.dishes.map((item, index) => {
+                              const on = index === frame.dishIndex;
+                              return (
+                                <li key={item.name} className="relative overflow-hidden rounded-xl">
+                                  {on ? (
+                                    <motion.span
+                                      layoutId="menu-screen-line"
+                                      className="pointer-events-none absolute inset-0 rounded-xl bg-white ring-1 ring-gold"
+                                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                                    />
+                                  ) : null}
+                                  <span className="relative flex w-full items-center gap-2 px-1.5 py-1.5 text-start">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={item.image} alt="" className="h-10 w-10 shrink-0 rounded-lg object-cover" />
+                                    <span className="min-w-0 flex-1">
+                                      <span className="block truncate text-[12px] font-bold text-burgundy-deep">{item.name}</span>
+                                      <span className="block truncate text-[10px] text-ink/50">{item.detail}</span>
+                                    </span>
+                                    <span className="font-sans text-sm font-bold text-gold-deep">{item.price}</span>
+                                  </span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  <p className="mt-auto pt-2 text-center text-[10px] text-ink/50">
+                    {open ? "التفاصيل على نفس صفحة الطلب" : "بيتصفح، وبعدين بيفتح صنف"}
+                  </p>
+                </div>
+              </PhoneShell>
+              <p className="mt-4 text-center text-sm font-semibold text-burgundy-deep">منيو ذكي</p>
+            </div>
           </div>
         </div>
-
-        <ul className="mt-4 grid gap-4 md:mt-8 md:grid-cols-3">
-          {menuNotes.map((note, index) => (
-            <motion.li
-              key={note.title}
-              className="rounded-[1.4rem] bg-white/85 p-5 shadow-[0_18px_44px_-28px_rgba(74,4,24,0.4)] ring-1 ring-white backdrop-blur-sm transition duration-300 hover:-translate-y-1"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.45, delay: 0.08 + index * 0.08, ease: "easeOut" }}
-            >
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-gold/30 text-burgundy-deep">
-                {note.icon}
-              </span>
-              <p className="mt-4 font-display text-xl font-bold text-burgundy-deep">{note.title}</p>
-              <p className="mt-2 text-base leading-7 text-ink/75">{note.body}</p>
-            </motion.li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-
-const gameCells = [null, null, null, 2, null, null, null, null, null, null, 4, null, null, 2, null, null];
-
-const gameNotes = [
-  {
-    title: "من نفس الصفحة",
-    body: "تحت حالة الطلب في زر: «العب وأنت تنتظر». بلا تطبيق وبلا ما يترك المطعم.",
-    icon: (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-        <path d="M8 6.5v11l10-5.5-10-5.5Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-  {
-    title: "الرقم قدامه",
-    body: "رقم الطلب يبقى فوق اللوحة، حتى وهو عم يلعب. ما بيضيع الطلب باللعبة.",
-    icon: (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-        <rect x="4" y="4" width="16" height="16" rx="3" fill="none" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M8 15V9M12 15V9M16 15v-3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
-    title: "يرجع بلحظة",
-    body: "«إغلاق اللعبة» ترجّعه لحالة الطلب. الصفحة نفسها، من غير ما يحدّث.",
-    icon: (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-        <path d="M8 8.5 5 12l3 3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M5 12h9.5a4.5 4.5 0 1 1 0 9" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-];
-
-function GameScreen() {
-  return (
-    <div className="flex h-full flex-col bg-[#f6e7ee] px-2.5 pt-10 pb-2.5">
-      <div className="rounded-xl bg-[#fff8ee] py-1.5 text-center text-[11px] font-bold text-burgundy-deep shadow-sm">
-        إغلاق اللعبة
-      </div>
-      <div className="mt-2 flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <div className="w-fit rounded-md bg-burgundy px-2 py-1 text-[10px] font-bold text-ivory">لعبة جديدة</div>
-          <div className="mt-1 flex gap-1">
-            {[
-              ["الأفضل", "0"],
-              ["النقاط", "0"],
-            ].map(([label, value]) => (
-              <div key={label} className="rounded-md bg-[#e7d3c4] px-1.5 py-0.5 text-center">
-                <p className="text-[8px] font-semibold text-burgundy/70">{label}</p>
-                <p className="font-sans text-[11px] leading-4 font-bold text-burgundy-deep" dir="ltr">
-                  {value}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-        <p className="font-sans text-[1.7rem] leading-none font-bold text-burgundy-deep" dir="ltr">
-          2048
-        </p>
-      </div>
-      <p className="mt-2 text-end text-[10px] leading-4 text-ink/55">اسحب اللوحة لدمج الأرقام المتشابهة.</p>
-      <p className="mt-1 text-center text-[11px] font-bold text-burgundy">
-        رقم الطلب <span className="font-sans">{orderNo}</span>
-      </p>
-      <div dir="ltr" className="mt-1.5 grid min-h-0 flex-1 grid-cols-4 grid-rows-4 gap-1 rounded-xl bg-[#d8c4b2] p-1.5">
-        {gameCells.map((value, index) => (
-          <span
-            key={index}
-            className={`grid place-items-center rounded-md font-sans text-sm font-bold text-burgundy-deep ${
-              value ? "bg-[#fff8ee] shadow-[0_4px_8px_-6px_rgba(74,4,24,0.45)]" : "bg-[#eadccf]"
-            }`}
-          >
-            {value || ""}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function GameStage() {
-  return (
-    <div className="relative mx-auto w-full max-w-[26rem] py-4">
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/20 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-[22rem] w-[22rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-gold/35" aria-hidden="true" />
-
-      <motion.div
-        className="absolute top-8 start-0 z-20 hidden rounded-2xl bg-white px-3 py-2.5 text-center shadow-[0_16px_36px_-22px_rgba(74,4,24,0.55)] ring-1 ring-gold/60 sm:block"
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.6 }}
-        transition={{ duration: 0.45, delay: 0.15, ease: "easeOut" }}
-      >
-        <p className="text-[11px] font-semibold text-ink/45">يتم التحضير</p>
-        <p className="mt-1 rounded-full bg-[#fff4df] px-3 py-1 text-xs font-bold text-burgundy">العب وأنت تنتظر</p>
-      </motion.div>
-
-      <div className="stage-float relative z-10 mx-auto w-fit">
-        <PhoneShell {...phoneShells.story}>
-          <GameScreen />
-        </PhoneShell>
-      </div>
-    </div>
-  );
-}
-
-function GameSection() {
-  return (
-    <section id="game" className="relative overflow-hidden bg-white px-5 py-24 sm:py-28" aria-labelledby="game-title">
-      <div className="pointer-events-none absolute top-10 start-[-4rem] h-72 w-72 rounded-full bg-foam blur-3xl" />
-      <div className="relative mx-auto max-w-6xl">
-        <div className="grid items-center gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:gap-12">
-          <div className="order-2 lg:order-none">
-            <motion.h2
-              {...rise}
-              id="game-title"
-              className="font-display text-4xl leading-tight font-bold text-burgundy-deep sm:text-5xl"
-            >
-              وهو ينتظر،
-              <span className="mt-1 block">
-                <span className="relative inline-block">
-                  بلعب لعبة
-                  <span className="absolute -bottom-1 start-0 h-[0.42rem] w-full rounded-full bg-gold sm:h-2" />
-                </span>
-              </span>
-            </motion.h2>
-            <motion.p
-              {...rise}
-              transition={{ duration: 0.55, delay: 0.1, ease: "easeOut" }}
-              className="mt-6 max-w-xl text-lg leading-8 text-ink/75"
-            >
-              من صفحة الطلب يفتح لعبة أرقام خفيفة. بيسحب اللوحة ويدمج المتشابه، ورقم طلبه يبقى قدامه لين يجهز الأكل.
-            </motion.p>
-          </div>
-          <div className="order-1 lg:order-none">
-            <GameStage />
-          </div>
-        </div>
-
-        <ul className="mt-4 grid gap-4 md:mt-8 md:grid-cols-3">
-          {gameNotes.map((note, index) => (
-            <motion.li
-              key={note.title}
-              className="rounded-[1.4rem] bg-ivory p-5 shadow-[0_18px_44px_-28px_rgba(74,4,24,0.35)] ring-1 ring-burgundy/10 transition duration-300 hover:-translate-y-1"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.45, delay: 0.08 + index * 0.08, ease: "easeOut" }}
-            >
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-gold/30 text-burgundy-deep">
-                {note.icon}
-              </span>
-              <p className="mt-4 font-display text-xl font-bold text-burgundy-deep">{note.title}</p>
-              <p className="mt-2 text-base leading-7 text-ink/75">{note.body}</p>
-            </motion.li>
-          ))}
-        </ul>
       </div>
     </section>
   );
