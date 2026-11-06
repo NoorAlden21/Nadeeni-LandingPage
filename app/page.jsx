@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import posthog from "posthog-js";
 import { useEffect, useRef, useState } from "react";
 
@@ -127,8 +127,8 @@ function FormMark() {
 }
 
 const rise = {
-  initial: { opacity: 0, y: 22 },
-  whileInView: { opacity: 1, y: 0 },
+  initial: { y: 16 },
+  whileInView: { y: 0 },
   viewport: { once: true, amount: 0.4 },
   transition: { duration: 0.55, ease: "easeOut" },
 };
@@ -189,6 +189,11 @@ const filmBeats = [
 
 function IntroFilm() {
   const [open, setOpen] = useState(true);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setOpen(false), 6200);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   if (!open) return null;
 
@@ -720,7 +725,7 @@ export default function HomePage() {
   return (
     <div id="top" className="overflow-x-clip">
       <IntroFilm />
-      <header className="sticky top-0 z-40 border-b border-burgundy/10 bg-ivory/75 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-burgundy/10 bg-ivory">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-2.5">
           <a href="#top" className="shrink-0 rounded-2xl">
             <BrandMark className="h-14 w-14" />
@@ -753,14 +758,9 @@ export default function HomePage() {
       </header>
 
       <main>
-        <motion.section
-          className="relative overflow-hidden bg-white"
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <div className="pointer-events-none absolute -top-24 start-[-6rem] h-72 w-72 rounded-full bg-gold/25 blur-3xl" />
-          <div className="pointer-events-none absolute top-40 end-[-4rem] h-80 w-80 rounded-full bg-foam blur-3xl" />
+        <section className="relative overflow-hidden bg-white">
+          <div className="pointer-events-none absolute -top-24 start-[-6rem] h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(205,166,73,0.28),transparent_68%)]" />
+          <div className="pointer-events-none absolute top-40 end-[-4rem] h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(248,232,237,0.95),transparent_70%)]" />
 
           <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 pt-12 pb-8 lg:grid-cols-[1.15fr_0.85fr] lg:pt-16 lg:pb-20">
             <div className="@container min-w-0">
@@ -826,10 +826,10 @@ export default function HomePage() {
 
             <StagePhone />
           </div>
-        </motion.section>
+        </section>
 
         <section id="benefits" className="relative overflow-hidden bg-[#f7f1e4] px-5 py-24 sm:py-28">
-          <div className="pointer-events-none absolute -top-20 end-[-5rem] h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
+          <div className="pointer-events-none absolute -top-20 end-[-5rem] h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(205,166,73,0.22),transparent_68%)]" />
           <div className="relative mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
               <motion.p
@@ -848,8 +848,8 @@ export default function HomePage() {
               </motion.h2>
               <motion.p
                 className="quote-float relative mt-6 inline-block rounded-2xl rounded-ss-md bg-white px-5 py-3 font-display text-2xl font-bold text-burgundy shadow-[0_16px_40px_-24px_rgba(74,4,24,0.4)] ring-1 ring-burgundy/10"
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ y: 12 }}
+                whileInView={{ y: 0 }}
                 viewport={{ once: true, amount: 0.6 }}
                 transition={{ duration: 0.5, delay: 0.12, ease: "easeOut" }}
               >
@@ -867,8 +867,8 @@ export default function HomePage() {
                   <motion.li
                     key={reason.title}
                     className="flex items-start gap-4 rounded-2xl bg-white/80 p-4 shadow-[0_16px_40px_-28px_rgba(74,4,24,0.45)] ring-1 ring-burgundy/10"
-                    initial={{ opacity: 0, y: 18 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ y: 12 }}
+                    whileInView={{ y: 0 }}
                     viewport={{ once: true, amount: 0.5 }}
                     transition={{ duration: 0.45, delay: 0.18 + index * 0.1, ease: "easeOut" }}
                   >
@@ -899,8 +899,8 @@ export default function HomePage() {
                   <motion.li
                     key={item}
                     className="flex items-baseline gap-3"
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ y: 8 }}
+                    whileInView={{ y: 0 }}
                     viewport={{ once: true, amount: 0.8 }}
                     transition={{ duration: 0.35, delay: 0.2 + index * 0.08, ease: "easeOut" }}
                   >
@@ -1216,40 +1216,24 @@ function StagePhone() {
 
   return (
     <div className="relative mx-auto w-full max-w-[340px] pt-6">
-      <span className="pointer-events-none absolute top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-gold/20 blur-3xl" aria-hidden="true" />
+      <span className="pointer-events-none absolute top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(205,166,73,0.22),transparent_68%)]" aria-hidden="true" />
       {ready && live ? <RippleBurst className="notify-ripple" /> : null}
 
       <div className={`relative ${live ? "stage-float" : ""}`}>
         <div className={ready && live ? "phone-buzz" : ""}>
-          <motion.div
+          <div
             aria-hidden={!ready}
-            initial={false}
-            animate={ready ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: -24, scale: 0.9 }}
-            transition={
-              ready
-                ? { type: "spring", stiffness: 460, damping: 16, mass: 0.7 }
-                : { duration: 0.22, ease: "easeIn" }
-            }
-            className="pointer-events-none absolute -top-5 inset-x-1 z-20 flex items-center gap-3 rounded-[1.3rem] bg-white px-3 py-2 shadow-[0_18px_40px_-18px_rgba(74,4,24,0.5)] ring-1 ring-gold/50"
+            className={`pointer-events-none absolute -top-5 inset-x-1 z-20 flex origin-top items-center gap-3 rounded-[1.3rem] bg-white px-3 py-2 shadow-[0_18px_40px_-18px_rgba(74,4,24,0.5)] ring-1 ring-gold/50 transition duration-300 ${
+              ready ? "translate-y-0 scale-100 opacity-100" : "-translate-y-6 scale-90 opacity-0"
+            }`}
           >
             <ReadyNotice tone="hero" />
-          </motion.div>
+          </div>
 
           <PhoneShell {...phoneShells.hero}>
-              <motion.div
-                className="absolute inset-0"
-                animate={{ backgroundColor: ready ? "#7e062a" : "#fdfaf1" }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              />
-              <motion.div
-                key={ready ? "ready" : "wait"}
-                className="absolute inset-0"
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-              >
-                {ready ? <StageReady /> : <StageWait live={live} />}
-              </motion.div>
+            <div key={ready ? "ready" : "wait"} className="absolute inset-0">
+              {ready ? <StageReady /> : <StageWait live={live} />}
+            </div>
           </PhoneShell>
         </div>
       </div>
@@ -1259,7 +1243,7 @@ function StagePhone() {
 
 function StageWait({ live, name = "اسم مطعمكم" }) {
   return (
-    <div className="flex h-full flex-col items-center px-4 pt-12 text-center">
+    <div className="flex h-full flex-col items-center bg-ivory px-4 pt-12 text-center">
       <div className="flex items-center gap-2 rounded-full bg-white px-3 py-1.5 shadow-sm ring-1 ring-gold/40">
         <span className="grid h-6 w-6 place-items-center rounded-md bg-gold text-xs font-bold text-burgundy-deep">
           ن
@@ -1308,15 +1292,10 @@ function StageWait({ live, name = "اسم مطعمكم" }) {
 
 function StageReady() {
   return (
-    <div className="flex h-full flex-col items-center justify-center px-4 pb-6 text-center text-ivory">
-      <motion.span
-        initial={{ scale: 0.4, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 420, damping: 14 }}
-        className="grid h-16 w-16 place-items-center rounded-full bg-gold text-3xl font-bold text-burgundy-deep"
-      >
+    <div className="flex h-full flex-col items-center justify-center bg-burgundy px-4 pb-6 text-center text-ivory">
+      <span className="grid h-16 w-16 place-items-center rounded-full bg-gold text-3xl font-bold text-burgundy-deep">
         ✓
-      </motion.span>
+      </span>
       <p className="mt-5 font-display text-6xl leading-none font-bold">{readyWord}</p>
       <span className="mt-3 h-1 w-16 rounded-full bg-gold" />
       <p className="mt-3 text-sm text-gold">{counterLine}</p>
@@ -1388,7 +1367,7 @@ function MenuBrowseSection() {
       className="relative overflow-hidden bg-[radial-gradient(90%_80%_at_100%_0%,#fffdf8_0%,#f8e8ed_46%,#f3e6c8_100%)] px-5 py-16 sm:py-20"
       aria-labelledby="menu-title"
     >
-      <div className="pointer-events-none absolute top-16 end-[-4rem] h-64 w-64 rounded-full bg-gold/25 blur-3xl" />
+      <div className="pointer-events-none absolute top-16 end-[-4rem] h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(205,166,73,0.28),transparent_68%)]" />
       <div className="relative mx-auto max-w-5xl">
         <motion.div {...rise} className="max-w-2xl">
           <h2 id="menu-title" className="font-display text-4xl leading-tight font-bold text-burgundy-deep sm:text-5xl">
@@ -1440,15 +1419,8 @@ function MenuBrowseSection() {
                     <span className="menu-live h-1.5 w-1.5 rounded-full bg-gold-deep" aria-hidden="true" />
                   </div>
                   <div className="mt-3 min-h-0 flex-1">
-                    <AnimatePresence mode="wait">
-                      {open ? (
-                        <motion.div
-                          key={open.name}
-                          initial={{ opacity: 0, x: -16 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: 16 }}
-                          transition={{ duration: 0.3, ease: "easeOut" }}
-                        >
+                    {open ? (
+                        <div key={open.name}>
                           <p className="text-[11px] font-bold text-burgundy">رجوع للقائمة</p>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={open.image} alt="" className="mt-2 h-36 w-full rounded-xl object-cover" />
@@ -1460,15 +1432,9 @@ function MenuBrowseSection() {
                             <p className="font-sans text-lg font-bold text-gold-deep">{open.price}</p>
                           </div>
                           <p className="mt-1 text-[11px] leading-5 text-ink/70">{open.note}</p>
-                        </motion.div>
+                        </div>
                       ) : (
-                        <motion.div
-                          key={leaf.name}
-                          initial={{ opacity: 0, x: 16 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -16 }}
-                          transition={{ duration: 0.3, ease: "easeOut" }}
-                        >
+                        <div key={leaf.name}>
                           <div className="flex gap-1" aria-hidden="true">
                             {menuLeaves.map((item, index) => (
                               <span
@@ -1506,9 +1472,8 @@ function MenuBrowseSection() {
                               );
                             })}
                           </ul>
-                        </motion.div>
+                        </div>
                       )}
-                    </AnimatePresence>
                   </div>
                   <p className="mt-auto pt-2 text-center text-[10px] text-ink/50">
                     {open ? "التفاصيل على نفس صفحة الطلب" : "بيتصفح، وبعدين بيفتح صنف"}
@@ -1697,8 +1662,8 @@ function StepsStory() {
                 <motion.li
                   key={step.n}
                   className="flex min-h-[52vh] items-center py-3 lg:min-h-[72vh]"
-                  initial={{ opacity: 0, y: 28 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ y: 16 }}
+                  whileInView={{ y: 0 }}
                   transition={{ duration: 0.55, ease: "easeOut" }}
                   viewport={{ once: true, amount: compact ? 0.35 : 0.72 }}
                   onViewportEnter={() => {
