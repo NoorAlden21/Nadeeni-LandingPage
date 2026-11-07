@@ -13,10 +13,30 @@ const plex = IBM_Plex_Sans_Arabic({
   variable: "--font-plex",
 });
 
+const title = "ناديني — جهاز النداء الرقمي للمطاعم";
+const description =
+  "استبدلوا أجهزة النداء برمز QR. الزبون يتابع طلبه من المتصفح، والكاشير يضغط تنبيه عندما يجهز الطعام. بلا تطبيق وبلا أجهزة.";
+
 export const metadata = {
-  title: "ناديني — جهاز النداء الرقمي للمطاعم",
-  description:
-    "استبدلوا أجهزة النداء برمز QR. الزبون يتابع طلبه من المتصفح، والكاشير يضغط تنبيه عندما يجهز الطعام. بلا تطبيق وبلا أجهزة.",
+  metadataBase: new URL("https://nadeeni-chi.vercel.app"),
+  title,
+  description,
+  applicationName: "ناديني",
+  openGraph: {
+    title,
+    description,
+    url: "/",
+    siteName: "ناديني",
+    locale: "ar_AR",
+    type: "website",
+    images: [{ url: "/logo.png", alt: "ناديني" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/logo.png"],
+  },
 };
 
 export default function RootLayout({ children }) {
